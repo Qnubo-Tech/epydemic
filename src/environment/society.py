@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-from src.society import Agent, Status
+from src.geometry import Geometry
+from src.environment import Agent, Status
 
 
 class Society:
@@ -22,9 +23,8 @@ class Society:
         for i in range(self.population):
 
             agents.append(
-                Agent(x=random.uniform(0, 1),
-                      y=random.uniform(0, 1),
-                      radius=0.02,
+                Agent(x=random.uniform(0, Geometry.Box.Lx),
+                      y=random.uniform(0, Geometry.Box.Ly),
                       status=np.random.choice([e for e in Status]),
                       mobility=0.0001
                       )
@@ -55,7 +55,6 @@ class Society:
         f = self.compute_field(mesh)
 
         ax.clear()
-        levels = np.arange(0, 2, 0.2)
         ax.contour(mesh.X, mesh.Y, f)
         ax.set_aspect('equal')
 
@@ -66,14 +65,14 @@ class Society:
         [(
             ax.scatter(agent.x, agent.y, s=5, color=agent.status.value),
             ax.add_artist(plt.Circle((agent.x, agent.y),
-                                     radius=agent.infection_radius,
+                                     radius=agent.disease.infection_radius,
                                      color=agent.status.value,
                                      alpha=0.5*agent.viral_load))
          )
             for agent in self.agents
         ]
-        ax.set_xlim(0, 1)
-        ax.set_ylim(0, 1)
+        ax.set_xlim(0, Geometry.Box.Lx)
+        ax.set_ylim(0, Geometry.Box.Ly)
         ax.set_aspect('equal')
 
 
