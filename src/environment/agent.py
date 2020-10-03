@@ -1,16 +1,11 @@
-from enum import Enum
-
 import numpy as np
 
 from src.geometry import Geometry
-from src.environment.disease import Disease
+from src.environment.disease import Disease, Status
 from src.simulation import Time
 
 
-class Status(Enum):
-    Infected = "red"
-    Immune = "darkgreen"
-    Healthy = "blue"
+
 
 
 class Agent:
@@ -52,12 +47,9 @@ class Agent:
         self.position += self._update_position()
         self._apply_boundary_conditions()
 
-        self.disease.step()
+        self.disease.step(status=self.status)
 
     def viral_force(self, position):
 
-        #return ((np.linalg.norm(position - self.position) <= self.infection_radius) and
-        #        any(position != self.position)) * self.viral_load
-
-        return any(position != self.position) * (1 / (1 + np.exp(-10*np.linalg.norm(position - self.position)))) * self.viral_load
+        return self.disease.force(position=position, agent_position=self.position)
 
