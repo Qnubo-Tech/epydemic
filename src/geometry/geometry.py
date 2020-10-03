@@ -9,5 +9,5 @@ class Geometry:
         x_range = np.linspace(0, Lx, 100)
         y_range = np.linspace(0, Ly, 100)
         X, Y = np.meshgrid(x_range, y_range)
-        x_lims = [0, Lx]
-        y_lims = [0, Ly]
+        x_limits = [0, Lx]
+        y_limits = [0, Ly]

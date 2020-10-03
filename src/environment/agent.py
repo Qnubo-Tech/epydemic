@@ -5,9 +5,6 @@ from src.environment.disease import Disease, Status
 from src.simulation import Time
 
 
-
-
-
 class Agent:
 
     def __init__(self, x: float, y: float, mobility: float, status: Status):
