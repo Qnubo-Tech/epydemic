@@ -39,12 +39,10 @@ class Agent:
 
         self.position = self.position % np.array([Geometry.Box.Lx, Geometry.Box.Ly])
 
-    def step(self):
-
+    def step(self, force):
         self.position += self._update_position()
         self._apply_boundary_conditions()
-
-        self.disease.step(status=self.status)
+        self.status = self.disease.step(status=self.status, force=force)
 
     def viral_force(self, position):
 

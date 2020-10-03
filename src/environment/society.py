@@ -25,7 +25,7 @@ class Society:
             agents.append(
                 Agent(x=random.uniform(0, Geometry.Box.Lx),
                       y=random.uniform(0, Geometry.Box.Ly),
-                      status=np.random.choice([e for e in Status]),
+                      status=np.random.choice([Status.Infected, Status.Healthy], p=[0.01, 0.99]),
                       mobility=0.0001
                       )
             )
@@ -34,7 +34,7 @@ class Society:
 
     def make_step(self):
 
-        [agent.step() for agent in self.agents]
+        [agent.step(force=self.force_field(agent.position)) for agent in self.agents]
 
     def force_field(self, position):
 
@@ -61,7 +61,6 @@ class Society:
     def plot(self, ax):
 
         ax.clear()
-
         [(
             ax.scatter(agent.x, agent.y, s=5, color=agent.status.value),
             ax.add_artist(plt.Circle((agent.x, agent.y),
@@ -75,6 +74,12 @@ class Society:
         ax.set_ylim(0, Geometry.Box.Ly)
         ax.set_aspect('equal')
 
+    def count_statuses(self, status: Status):
+        return len([1 for agent in self.agents if (agent.status == status)])
 
-
-
+    def get_status(self):
+        n_healthy = self.count_statuses(Status.Healthy)
+        n_infected = self.count_statuses(Status.Infected)
+        n_immune = self.count_statuses(Status.Immune)
+        total = sum([n_healthy, n_infected, n_immune])
+        return {'healthy': n_healthy, 'infected': n_infected, 'immune': n_immune, 'total': total}
