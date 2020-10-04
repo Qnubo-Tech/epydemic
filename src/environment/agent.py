@@ -42,7 +42,7 @@ class Agent:
     def step(self, force):
         self.position += self._update_position()
         self._apply_boundary_conditions()
-        self.status = self.disease.step(status=self.status, force=force)
+        self.status, self.mobility = self.disease.step(status=self.status, force=force)
 
     def viral_force(self, position):
 
