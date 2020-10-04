@@ -1,4 +1,6 @@
 
+AVERAGE_MOBILITY = 0.0001
+
 
 class Time:
     STEP_SEC = 3600
