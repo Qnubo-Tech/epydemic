@@ -1,1 +1,1 @@
-from .configuration import Time
+from .configuration import Time, AVERAGE_MOBILITY
