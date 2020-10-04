@@ -2,10 +2,13 @@ import matplotlib.pyplot as plt
 
 from src.environment import Status, Society
 from src.simulation import Time
+from src.geometry.geometry import Geometry
 
 def run():
 
-    society = Society(population=100, volume=1)
+    society = Society(
+        population=54, volume=1, initial_condition={'healthy': 0.99, 'infected': 0.01}
+    )
 
     # plt.ion()
     # fig, ax = plt.subplots()
@@ -16,22 +19,8 @@ def run():
     # society.plot(ax=ax)
     # plt.show()
 
-    # plt.ion()
-    # fig, ax = plt.subplots()
-    #
-    # legend_elements = [ax.scatter(0, 0, s=5, color=e.value, label=e.name) for e in Status]
-    #
-    # for i in range(500):
-    #     society.make_step()
-    #     society.plot(ax)
-    #     ax.set_title(f"Days={i // 24}")
-    #     ax.legend(handles=legend_elements, loc='upper left', bbox_to_anchor=(1.05, 1))
-    #     plt.pause(0.01)
-    #
-    # plt.show()
-
     plt.ion()
-    fig, ax = plt.subplots()
+    fig, (ax1, ax2) = plt.subplots(1, 2)
 
     immune, infected, healthy, times = ([],[],[], [])
     time = 0
@@ -42,22 +31,27 @@ def run():
     iteration = 0
     for dt in range(2000):
         society.make_step()
-        res = society.get_status()
-
-        immune.append(res['immune'])
-        healthy.append(res['healthy'])
-        infected.append(res['infected'])
-        times.append(time / 3600 / 24)
 
         if iteration == 0 or (iteration == 10):
-            ax.plot(times, healthy, c=Status.Healthy.value, marker="^", ls='--', label='Healthy',)
-            ax.plot(times, infected, c=Status.Infected.value, marker="o", ls='-', label='Infected')
-            ax.plot(times, immune, c=Status.Immune.value, marker="v", ls=':', label='Immmune')
+            res = society.get_status()
+            immune.append(res['immune'] / res['total'])
+            healthy.append(res['healthy'] / res['total'])
+            infected.append(res['infected'] / res['total'])
+            times.append(time / 3600 / 24)
+
+            ax1.plot(times, healthy, c=Status.Healthy.value, ls='--', label='Healthy',)
+            ax1.plot(times, infected, c=Status.Infected.value, marker="o", ls='-', label='Infected')
+            ax1.plot(times, immune, c=Status.Immune.value, ls=':', label='Immmune')
+
+            ax1.set_ylim(0, Geometry.Box.Ly)
+
+            society.plot(ax2)
+
             plt.show()
             print(f'{time / 3600}h / {iteration} | inf: {res["infected"]}, hea: {res["healthy"]}, imm: {res["immune"]}')
 
         if iteration == 0:
-            ax.legend(loc=2)
+            ax1.legend(loc=2)
 
         if iteration == 0 or (iteration == 10):
             iteration = 1
