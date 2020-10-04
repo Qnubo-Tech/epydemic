@@ -12,9 +12,9 @@ from src.simulation import AVERAGE_MOBILITY
 
 class Society:
 
-    def __init__(self, population, volume, initial_condition):
+    def __init__(self, population, initial_condition, volume=1.0):
 
-        self.population = population
+        self.population = int(population)
         self.volume = volume
         self.agents = self._create_agents(initial_condition)
 

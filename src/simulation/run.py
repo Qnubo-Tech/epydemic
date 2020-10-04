@@ -1,13 +1,19 @@
+import logging
 import matplotlib.pyplot as plt
 
 from src.environment import Status, Society
-from src.simulation import Time
 from src.geometry.geometry import Geometry
+
+from src.simulation import (Time, POPULATION, HEALTHY_PC, INFECTED_PC)
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 def run():
 
     society = Society(
-        population=54, volume=1, initial_condition={'healthy': 0.99, 'infected': 0.01}
+        population=POPULATION,
+        initial_condition={'healthy': HEALTHY_PC, 'infected': INFECTED_PC}
     )
 
     # plt.ion()
@@ -48,7 +54,7 @@ def run():
             society.plot(ax2)
 
             plt.show()
-            print(f'{time / 3600}h / {iteration} | inf: {res["infected"]}, hea: {res["healthy"]}, imm: {res["immune"]}')
+            logger.info(f'| {time / 3600}h - infected: {res["infected"]}, healthy: {res["healthy"]}, immune: {res["immune"]}')
 
         if iteration == 0:
             ax1.legend(loc=2)

@@ -2,7 +2,18 @@ from enum import Enum
 
 import numpy as np
 
-from src.simulation import Time, AVERAGE_MOBILITY
+from src.simulation import (
+    Time,
+    AVERAGE_MOBILITY,
+    RECOVERY_TIME,
+    RECOVERY_TIME_ERR,
+    IMMUNITY_SHIELD_TIME,
+    IMMUNITY_SHIELD_TIME_ERR,
+    IMMUNITY_PROBABILITY,
+    IMMUNITY_LOSS_PROBABILITY,
+    VIRAL_STICKINESS,
+    VIRAL_UNLOADING_RATE,
+)
 
 
 class Status(Enum):
@@ -13,35 +24,20 @@ class Status(Enum):
 
 class Disease:
 
-    MEAN_TIME_RECOVERY_IN_DAYS = 21
-    MEAN_TIME_RECOVERY = MEAN_TIME_RECOVERY_IN_DAYS * 24 * 60 * 60
-    TIME_RECOVERY_STDV_DAYS = 7
-    TIME_RECOVERY_STDV = TIME_RECOVERY_STDV_DAYS * 24 * 60 * 60
-
-    IMMUNITY_DEVELOPED_PROBABILITY = 0.4
-    IMMUNITY_LOSING_PROBABILITY = 0.5
-
-    SPREADING_PROBABILITY = 0.3
-
-    MEAN_TIME_IMMUNITY_SHIELD_IN_DAYS = 30 * 3
-    MEAN_TIME_IMMUNITY_SHIELD = MEAN_TIME_IMMUNITY_SHIELD_IN_DAYS * 24 * 60 * 60
-    IMMUNITY_SHIELD_STDV_DAYS = 30 * 3
-    IMMUNITY_SHIELD_STDV = IMMUNITY_SHIELD_STDV_DAYS * 24 * 60 * 60
-
-    UNLOADING_RATE = 0.015
-
     def __init__(self, viral_load: float, radius: float):
 
         self.viral_load = viral_load
         self.infection_radius = radius
-        # self.mean_recovery_time = max(0, np.random.normal(loc=Disease.MEAN_TIME_RECOVERY,
-        #                                                   scale=Disease.TIME_RECOVERY_STDV))
-        self.mean_recovery_time = 3 * 24 * 60 * 60
-        # self.mean_immunity_shield = max(0, np.random.normal(loc=Disease.MEAN_TIME_IMMUNITY_SHIELD,
-        #                                                     scale=Disease.IMMUNITY_SHIELD_STDV))
-        self.mean_immunity_shield = 30 * 24 * 60 * 60
-        self.t_infected = 0
-        self.t_immunized = 0
+
+        # self.mean_recovery_time = max(0, np.random.normal(loc=RECOVERY_TIME,
+        #                                                   scale=RECOVERY_TIME_ERR))
+        self.mean_recovery_time = RECOVERY_TIME
+
+        # self.mean_immunity_shield = max(0, np.random.normal(loc=IMMUNITY_SHIELD_TIME,
+        #                                                     scale=IMMUNITY_SHIELD_TIME_ERR))
+        self.mean_immunity_shield = IMMUNITY_SHIELD_TIME
+
+        self.t_infected, self.t_immunized = (0, 0)
 
     def _update_infection_times(self, status: Status):
 
@@ -59,11 +55,11 @@ class Disease:
 
         # Already passed the disease (but maybe not immune):
         if (self.t_infected > self.mean_recovery_time) and (status == Status.Infected):
-            self.viral_load *= np.exp(-Disease.UNLOADING_RATE)
+            self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
 
             n_status = np.random.choice(
                 [Status.Immune, Status.Healthy],
-                p=[Disease.IMMUNITY_DEVELOPED_PROBABILITY, (1-Disease.IMMUNITY_DEVELOPED_PROBABILITY)]
+                p=[IMMUNITY_PROBABILITY, (1-IMMUNITY_PROBABILITY)]
             )
 
             self.t_infected = 0
@@ -73,11 +69,11 @@ class Disease:
         if status == Status.Healthy:
             # Getting some infection:
             if force != 0:
-                self.viral_load += min(Disease.SPREADING_PROBABILITY * force, 1.0)
+                self.viral_load += min(VIRAL_STICKINESS * force, 1.0)
 
             # Unloading because it left the dangerous region:
             else:
-                self.viral_load *= np.exp(-Disease.UNLOADING_RATE)
+                self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
 
             # Is is already infected?:
             if self.viral_load > 0.8:
@@ -89,12 +85,15 @@ class Disease:
 
         # For the immunes:
         else:
-            self.viral_load *= np.exp(-Disease.UNLOADING_RATE)
+            self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
             return status
 
     def _update_immune_agents(self, status):
         if (self.t_immunized > self.mean_immunity_shield) and (status == Status.Immune):
-            st = np.random.choice([Status.Healthy, Status.Immune])
+            st = np.random.choice(
+                [Status.Healthy, Status.Immune],
+                p=[IMMUNITY_LOSS_PROBABILITY, 1-IMMUNITY_LOSS_PROBABILITY]
+            )
             if st == Status.Healthy:
                 self.t_immunized = 0
             return status

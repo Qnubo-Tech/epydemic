@@ -1,7 +1,27 @@
+from configparser import ConfigParser
 
-AVERAGE_MOBILITY = 0.0001
+config = ConfigParser()
+config.read('simulation/config.ini')
+
+
+AVERAGE_MOBILITY = config.getfloat('agent.properties', 'mobility')
+POPULATION = config.getfloat('simulation', 'population')
+HEALTHY_PC = config.getfloat('simulation', 'healthy')
+INFECTED_PC = config.getfloat('simulation', 'infected')
+
+RECOVERY_TIME = config.getfloat('disease.properties', 'recovery_time_days') * 24 * 3600
+RECOVERY_TIME_ERR = config.getfloat('disease.properties', 'recovery_time_err_days') * 24 * 3600
+
+IMMUNITY_PROBABILITY = config.getfloat('disease.properties', 'immunity_probability')
+IMMUNITY_LOSS_PROBABILITY = config.getfloat('disease.properties', 'immunity_loss_probability')
+
+VIRAL_STICKINESS = config.getfloat('disease.properties', 'viral_stickiness')
+VIRAL_UNLOADING_RATE = config.getfloat('disease.properties', 'viral_unloading_rate')
+
+IMMUNITY_SHIELD_TIME = config.getfloat('disease.properties', 'immunity_shield_days') * 24 * 3600
+IMMUNITY_SHIELD_TIME_ERR = config.getfloat('disease.properties', 'immunity_shield_err_days') * 24 * 3600
 
 
 class Time:
-    STEP_SEC = 3600
+    STEP_SEC = config.getfloat('simulation', 'time_scale')
     STEP_MIN = STEP_SEC / 60
