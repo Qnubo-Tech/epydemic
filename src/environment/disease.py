@@ -29,13 +29,13 @@ class Disease:
         self.viral_load = viral_load
         self.infection_radius = radius
 
-        # self.mean_recovery_time = max(0, np.random.normal(loc=RECOVERY_TIME,
-        #                                                   scale=RECOVERY_TIME_ERR))
-        self.mean_recovery_time = RECOVERY_TIME
+        self.mean_recovery_time = max(0, np.random.normal(loc=RECOVERY_TIME,
+                                                           scale=RECOVERY_TIME_ERR))
+        #self.mean_recovery_time = RECOVERY_TIME
 
-        # self.mean_immunity_shield = max(0, np.random.normal(loc=IMMUNITY_SHIELD_TIME,
-        #                                                     scale=IMMUNITY_SHIELD_TIME_ERR))
-        self.mean_immunity_shield = IMMUNITY_SHIELD_TIME
+        self.mean_immunity_shield = max(0, np.random.normal(loc=IMMUNITY_SHIELD_TIME,
+                                                             scale=IMMUNITY_SHIELD_TIME_ERR))
+        #self.mean_immunity_shield = IMMUNITY_SHIELD_TIME
 
         self.t_infected, self.t_immunized = (0, 0)
 
@@ -69,15 +69,16 @@ class Disease:
         if status == Status.Healthy:
             # Getting some infection:
             if force != 0:
-                self.viral_load += min(VIRAL_STICKINESS * force, 1.0)
+                self.viral_load += VIRAL_STICKINESS * force
+                self.viral_load = min(self.viral_load, 1.0)
 
             # Unloading because it left the dangerous region:
             else:
                 self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
 
             # Is is already infected?:
-            if self.viral_load > 0.8:
-                self.viral_load = 1
+            if self.viral_load > 0.9:
+                #self.viral_load = 1
                 return Status.Infected
 
             # It's still healthy:
@@ -96,16 +97,18 @@ class Disease:
             )
             if st == Status.Healthy:
                 self.t_immunized = 0
-            return status
+            return st
+
+        return status
 
     def _update_status(self, status):
-        # self._update_immune_agents(status)
-        return status
+        return self._update_immune_agents(status)
+        #return status
 
     @staticmethod
     def _get_sick_mobility():
-        # return np.random.choice([1, 0], p=[0.8, 0.2])*AVERAGE_MOBILITY
-        return AVERAGE_MOBILITY
+        return np.random.choice([1, 0], p=[0.8, 0.2])*AVERAGE_MOBILITY
+        #return AVERAGE_MOBILITY
 
     def _update_mobility(self, status):
         return (status == Status.Infected) * self._get_sick_mobility() \

@@ -28,7 +28,7 @@ def run():
     plt.ion()
     fig, (ax1, ax2) = plt.subplots(1, 2)
 
-    immune, infected, healthy, times = ([],[],[], [])
+    immune, infected, healthy, times = ([], [], [], [])
     time = 0
 
     plt.xlabel('time / days')
