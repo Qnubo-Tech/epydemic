@@ -5,6 +5,8 @@ config.read('simulation/config.ini')
 
 
 AVERAGE_MOBILITY = config.getfloat('agent.properties', 'mobility')
+MOBILITTY_HOURS_THRESHOLD = config.getint('agent.properties', 'mobility_hours')
+
 POPULATION = config.getfloat('simulation', 'population')
 HEALTHY_PC = config.getfloat('simulation', 'healthy')
 INFECTED_PC = config.getfloat('simulation', 'infected')

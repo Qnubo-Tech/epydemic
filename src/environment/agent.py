@@ -2,7 +2,7 @@ import numpy as np
 
 from src.geometry import Geometry
 from src.environment.disease import Disease, Status
-from src.simulation import Time
+from src.simulation import Time, MOBILITTY_HOURS_THRESHOLD
 
 
 class Agent:
@@ -15,6 +15,8 @@ class Agent:
         self.status = status
         initial_viral_load = self._set_initial_viral_load()
         self.disease = Disease(viral_load=initial_viral_load, radius=0.02)
+
+        self.t_alive = 0
 
     @property
     def x(self):
@@ -33,7 +35,12 @@ class Agent:
 
     def _update_position(self):
 
-        return np.random.normal(0, self.mobility * Time.STEP_SEC, size=2)
+        hour = (self.t_alive / Time.STEP_SEC) % 24
+
+        if hour <= MOBILITTY_HOURS_THRESHOLD:
+            return np.random.normal(0, self.mobility * Time.STEP_SEC, size=2)
+        else:
+            return np.zeros_like(self.position)
 
     def _apply_boundary_conditions(self):
 
@@ -43,6 +50,7 @@ class Agent:
         self.position += self._update_position()
         self._apply_boundary_conditions()
         self.status, self.mobility = self.disease.step(status=self.status, force=force)
+        self.t_alive += Time.STEP_SEC
 
     def viral_force(self, position):
 
