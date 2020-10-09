@@ -4,7 +4,12 @@ import matplotlib.pyplot as plt
 from src.environment import Status, Society
 from src.geometry.geometry import Geometry
 
-from src.simulation import (Time, POPULATION, HEALTHY_PC, INFECTED_PC)
+from src.simulation import (
+    Graph, Time, POPULATION, HEALTHY_PC, INFECTED_PC,
+    RECOVERY_TIME_DAYS, IMMUNITY_SHIELD_TIME_DAYS,
+    IMMUNITY_PROBABILITY, IMMUNITY_LOSS_PROBABILITY,
+    VIRAL_STICKINESS
+)
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -26,13 +31,29 @@ def run():
     # plt.show()
 
     plt.ion()
-    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig = plt.figure()
+    gs = fig.add_gridspec(3, 4)
+    ax1 = fig.add_subplot(gs[:, -2:])
+    ax2 = fig.add_subplot(gs[1:, :-2])
+    ax3 = fig.add_subplot(gs[0, :-2])
 
     immune, infected, healthy, times = ([], [], [], [])
     time = 0
 
-    plt.xlabel('time / days')
-    plt.ylabel('N')
+    ax1.set_xlabel('time / days')
+    ax1.set_ylabel('N')
+
+    table_params = {
+        "Population": POPULATION,
+        "Time scale [h]": Time.STEP_HOUR,
+        "Mean recovery time [days]": RECOVERY_TIME_DAYS,
+        "Mean immunity shield [days]": IMMUNITY_SHIELD_TIME_DAYS,
+        "Immunity probability": IMMUNITY_PROBABILITY,
+        "Loss immunity probability": IMMUNITY_LOSS_PROBABILITY,
+        "Viral stickiness": VIRAL_STICKINESS
+    }
+
+    Graph.plot_table_params(axis=ax3, params_dict=table_params)
 
     iteration = 0
     for dt in range(2000):
