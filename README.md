@@ -14,6 +14,12 @@ The idea of this work and repository is to provide the scientific community with
 
 ## Requirements
 
-## Contributors
+[TBC]
 
-## Acknowledgements
+## Contributing
+
+We encourage all the scientists and researchers to contribute to this repository to make it better and more complete and realistic. However, we encourage to read the [CONTRIBUTING.md](CONTRIBUTING.md) if you feel like contributing to this project. There you will find the basic details on how to proceed in a way which follows our standards of work and communication.
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](LICENSE.md) file for details
