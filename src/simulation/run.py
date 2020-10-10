@@ -14,6 +14,7 @@ from src.simulation import (
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
+
 def run():
 
     society = Society(
@@ -37,7 +38,7 @@ def run():
     ax2 = fig.add_subplot(gs[1:, :-2])
     ax3 = fig.add_subplot(gs[0, :-2])
 
-    immune, infected, healthy, times = ([], [], [], [])
+    immune, infected, healthy, confined, times = ([], [], [], [], [])
     time = 0
 
     ax1.set_xlabel('time / days')
@@ -64,18 +65,20 @@ def run():
             immune.append(res['immune'] / res['total'])
             healthy.append(res['healthy'] / res['total'])
             infected.append(res['infected'] / res['total'])
+            confined.append(res['confined'] / res['total'])
             times.append(time / 3600 / 24)
 
-            ax1.plot(times, healthy, c=Status.Healthy.value, ls='--', label='Healthy',)
-            ax1.plot(times, infected, c=Status.Infected.value, marker="o", ls='-', label='Infected')
-            ax1.plot(times, immune, c=Status.Immune.value, ls=':', label='Immmune')
+            ax1.plot(times, healthy, c=Status.Healthy.value, ls='--', label=Status.Healthy.name)
+            ax1.plot(times, infected, c=Status.Infected.value, marker="o", ls='-', label=Status.Infected.name)
+            ax1.plot(times, immune, c=Status.Immune.value, ls=':', label=Status.Immune.name)
+            ax1.plot(times, confined, c=Status.Confined.value, marker='*', ls='-', label=Status.Confined.name)
 
             ax1.set_ylim(0, Geometry.Box.Ly)
 
             society.plot(ax2)
 
             plt.show()
-            logger.info(f'| {time / 3600}h - infected: {res["infected"]}, healthy: {res["healthy"]}, immune: {res["immune"]}')
+            logger.info(f'| {time / 3600}h - infected: {res["infected"]}, healthy: {res["healthy"]}, immune: {res["immune"]}, confined: {res["confined"]}')
 
         if iteration == 0:
             ax1.legend(loc=2)

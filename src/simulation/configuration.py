@@ -18,6 +18,8 @@ RECOVERY_TIME_ERR = config.getfloat('disease.properties', 'recovery_time_err_day
 IMMUNITY_PROBABILITY = config.getfloat('disease.properties', 'immunity_probability')
 IMMUNITY_LOSS_PROBABILITY = config.getfloat('disease.properties', 'immunity_loss_probability')
 
+CONFINED_PROBABILITY = config.getfloat('disease.properties', 'confined_probability')
+
 VIRAL_STICKINESS = config.getfloat('disease.properties', 'viral_stickiness')
 VIRAL_UNLOADING_RATE = config.getfloat('disease.properties', 'viral_unloading_rate')
 

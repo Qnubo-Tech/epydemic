@@ -47,9 +47,12 @@ class Agent:
         self.position = self.position % np.array([Geometry.Box.Lx, Geometry.Box.Ly])
 
     def step(self, force):
-        self.position += self._update_position()
-        self._apply_boundary_conditions()
         self.status, self.mobility = self.disease.step(status=self.status, force=force)
+        if self.status != Status.Confined:
+            self.position += self._update_position()
+            self._apply_boundary_conditions()
+        else:
+            self.position = np.array([-1.0, -1.0])
         self.t_alive += Time.STEP_SEC
 
     def viral_force(self, position):

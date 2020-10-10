@@ -98,5 +98,12 @@ class Society:
         n_healthy = self.count_statuses(Status.Healthy)
         n_infected = self.count_statuses(Status.Infected)
         n_immune = self.count_statuses(Status.Immune)
-        total = sum([n_healthy, n_infected, n_immune])
-        return {'healthy': n_healthy, 'infected': n_infected, 'immune': n_immune, 'total': total}
+        n_confined = self.count_statuses(Status.Confined)
+        total = sum([n_healthy, n_infected, n_immune, n_confined])
+        return {
+            "healthy": n_healthy,
+            "infected": n_infected,
+            "immune": n_immune,
+            "confined": n_confined,
+            "total": total
+        }
