@@ -1,4 +1,4 @@
-<img src="images/virus.png" alt="virus" height="100" width="100">/> 
+<img src="images/virus.png" alt="virus" height="100" width="100"/> 
 
 ## Welcome to IDDS
 
