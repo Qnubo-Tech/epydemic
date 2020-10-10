@@ -95,15 +95,6 @@ class Society:
         return len([1 for agent in self.agents if (agent.status == status)])
 
     def get_status(self):
-        n_healthy = self.count_statuses(Status.Healthy)
-        n_infected = self.count_statuses(Status.Infected)
-        n_immune = self.count_statuses(Status.Immune)
-        n_confined = self.count_statuses(Status.Confined)
-        total = sum([n_healthy, n_infected, n_immune, n_confined])
-        return {
-            "healthy": n_healthy,
-            "infected": n_infected,
-            "immune": n_immune,
-            "confined": n_confined,
-            "total": total
-        }
+        status_dict = {st.name: self.count_statuses(st) for st in Status}
+        status_dict["Total"] = sum(status_dict.values())
+        return status_dict
