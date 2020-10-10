@@ -20,4 +20,4 @@ The steps are quite standard in the GitHub community:
 
 ## Style
 
-Our style of code adheres to Google's standards ([google-styleguide](https://github.com/google/styleguide)). We want to keep the source consistent, readable and easy to merge. For this reason we use rigid coding style and we expect all contributors to conform [this](https://google.github.io/styleguide/cppguide.html) guidelines. Please, use [.clang-format](.clang-format) to check your formatting.
+Our style of code adheres to Google's standards ([google-styleguide](https://github.com/google/styleguide)). We want to keep the source consistent, readable and easy to merge. For this reason we use rigid coding style and we expect all contributors to conform [this](https://google.github.io/styleguide/pyguide.html) guidelines. Please, use [.clang-format](.clang-format) to check your formatting.
