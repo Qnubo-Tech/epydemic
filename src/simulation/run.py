@@ -33,7 +33,7 @@ def run():
     society_progress = {st.name: [] for st in Status}
     time = 0
 
-    ax1.set_xlabel('time / days')
+    ax1.set_xlabel('time [days]')
     ax1.set_ylabel('N')
 
     table_params = {
@@ -79,7 +79,7 @@ def run():
 
         if iteration == 0 or (iteration == 10):
             iteration = 1
-            plt.pause(0.01)
+            plt.pause(0.001)
 
         time += Time.STEP_SEC
         iteration += 1

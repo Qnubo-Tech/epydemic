@@ -4,6 +4,7 @@ import numpy as np
 
 from src.simulation import (
     Time,
+    StochasticParams,
     AVERAGE_MOBILITY,
     RECOVERY_TIME,
     RECOVERY_TIME_ERR,
@@ -31,15 +32,26 @@ class Disease:
         self.viral_load = viral_load
         self.infection_radius = radius
 
-        self.mean_recovery_time = max(0, np.random.normal(loc=RECOVERY_TIME,
-                                                          scale=RECOVERY_TIME_ERR))
-        #self.mean_recovery_time = RECOVERY_TIME
-
-        self.mean_immunity_shield = max(0, np.random.normal(loc=IMMUNITY_SHIELD_TIME,
-                                                            scale=IMMUNITY_SHIELD_TIME_ERR))
-        #self.mean_immunity_shield = IMMUNITY_SHIELD_TIME
+        self.mean_recovery_time = self._set_mean_recovery_time()
+        self.mean_immunity_shield = self._set_mean_immunity_shield()
 
         self.t_infected, self.t_immunized = (0, 0)
+
+    @staticmethod
+    def _set_mean_recovery_time():
+
+        if StochasticParams.MEAN_RECOVERY_TIME:
+            return max(0, np.random.normal(loc=RECOVERY_TIME, scale=RECOVERY_TIME_ERR))
+        else:
+            return RECOVERY_TIME
+
+    @staticmethod
+    def _set_mean_immunity_shield():
+
+        if StochasticParams.MEAN_IMMUNITY_SHIELD_TIME:
+            return max(0, np.random.normal(loc=IMMUNITY_SHIELD_TIME, scale=IMMUNITY_SHIELD_TIME_ERR))
+        else:
+            return IMMUNITY_SHIELD_TIME
 
     def _update_infection_times(self, status: Status):
 
@@ -132,8 +144,10 @@ class Disease:
 
     @staticmethod
     def _get_sick_mobility():
-        return np.random.choice([1, 0], p=[0.8, 0.2])*AVERAGE_MOBILITY
-        #return AVERAGE_MOBILITY
+        if StochasticParams.AVERAGE_MOBILITY_INFECTION:
+            return np.random.choice([1, 0], p=[0.8, 0.2])*AVERAGE_MOBILITY
+        else:
+            return AVERAGE_MOBILITY
 
     def _update_mobility(self, status):
         return (status == Status.Infected) * self._get_sick_mobility() \

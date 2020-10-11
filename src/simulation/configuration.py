@@ -32,3 +32,10 @@ class Time:
     STEP_SEC = config.getfloat('simulation', 'time_scale')
     STEP_MIN = STEP_SEC / 60
     STEP_HOUR = STEP_MIN / 60
+
+
+class StochasticParams:
+    MOBILITY_HOURS = False
+    MEAN_RECOVERY_TIME = False
+    MEAN_IMMUNITY_SHIELD_TIME = False
+    AVERAGE_MOBILITY_INFECTION = False
