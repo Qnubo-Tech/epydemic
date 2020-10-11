@@ -1,4 +1,4 @@
-##SIR model
+## SIR model
 
 Simple simulation following SIR model  
-<img src="images/sir.png" alt="SIR" height="2710" width="1744"/>
+<img src="https://github.com/Qnubo-Tech/IDDS/blob/master/images/sir.png" alt="SIR" height="700" width="1400"/>
