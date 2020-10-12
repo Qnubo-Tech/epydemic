@@ -7,7 +7,8 @@ import numpy as np
 
 from src.geometry import Geometry
 from src.environment import Agent, Status
-from src.simulation import AVERAGE_MOBILITY
+from src.environment.mobility import MobilityType
+from src.simulation import AVERAGE_MOBILITY, MOBILITY_TYPE
 
 
 class Society:
@@ -25,23 +26,28 @@ class Society:
         infected = max(1, round(initial_condition['infected']*self.population))
         immune = self.population - healthy - infected
 
+        mobility_type = MobilityType[MOBILITY_TYPE]
+
         [agents.append(
             Agent(x=random.uniform(0, Geometry.Box.Lx),
                   y=random.uniform(0, Geometry.Box.Ly),
                   status=Status.Healthy,
-                  mobility=AVERAGE_MOBILITY))
+                  mobility_value=AVERAGE_MOBILITY,
+                  mobility_type=mobility_type))
             for i in range(healthy)
         ], [agents.append(
             Agent(x=random.uniform(0, Geometry.Box.Lx),
                   y=random.uniform(0, Geometry.Box.Ly),
                   status=Status.Infected,
-                  mobility=AVERAGE_MOBILITY))
+                  mobility_value=AVERAGE_MOBILITY,
+                  mobility_type=mobility_type))
             for i in range(infected)
         ], [agents.append(
             Agent(x=random.uniform(0, Geometry.Box.Lx),
                   y=random.uniform(0, Geometry.Box.Ly),
                   status=Status.Immune,
-                  mobility=AVERAGE_MOBILITY))
+                  mobility_value=AVERAGE_MOBILITY,
+                  mobility_type=mobility_type))
             for i in range(immune)
         ]
 

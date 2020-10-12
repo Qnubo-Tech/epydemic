@@ -13,6 +13,7 @@ from src.simulation import (
     IMMUNITY_PROBABILITY,
     IMMUNITY_LOSS_PROBABILITY,
     CONFINED_PROBABILITY,
+    VIRAL_LOAD_INFECTION_THRESHOLD,
     VIRAL_STICKINESS,
     VIRAL_UNLOADING_RATE,
 )
@@ -98,7 +99,7 @@ class Disease:
                 self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
 
             # Is is already infected?:
-            if self.viral_load > 0.9:
+            if self.viral_load > VIRAL_LOAD_INFECTION_THRESHOLD:
                 #self.viral_load = 1
                 return Status.Infected
 

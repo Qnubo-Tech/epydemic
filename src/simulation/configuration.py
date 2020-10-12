@@ -5,11 +5,14 @@ config.read('simulation/config.ini')
 
 
 AVERAGE_MOBILITY = config.getfloat('agent.properties', 'mobility')
-MOBILITTY_HOURS_THRESHOLD = config.getint('agent.properties', 'mobility_hours')
+MOBILITY_TYPE = config.get('agent.properties', 'mobility_type').lower()
+MOBILITY_HOURS_THRESHOLD = config.getint('agent.properties', 'mobility_hours')
 
 POPULATION = config.getfloat('simulation', 'population')
 HEALTHY_PC = config.getfloat('simulation', 'healthy')
 INFECTED_PC = config.getfloat('simulation', 'infected')
+
+INFECTION_RADIUS = config.getfloat('disease.properties', 'infection_radius')
 
 RECOVERY_TIME_DAYS = config.getfloat('disease.properties', 'recovery_time_days')
 RECOVERY_TIME = config.getfloat('disease.properties', 'recovery_time_days') * 24 * 3600
@@ -19,6 +22,8 @@ IMMUNITY_PROBABILITY = config.getfloat('disease.properties', 'immunity_probabili
 IMMUNITY_LOSS_PROBABILITY = config.getfloat('disease.properties', 'immunity_loss_probability')
 
 CONFINED_PROBABILITY = config.getfloat('disease.properties', 'confined_probability')
+
+VIRAL_LOAD_INFECTION_THRESHOLD = config.getfloat('disease.properties', 'viral_load_infection_threshold')
 
 VIRAL_STICKINESS = config.getfloat('disease.properties', 'viral_stickiness')
 VIRAL_UNLOADING_RATE = config.getfloat('disease.properties', 'viral_unloading_rate')

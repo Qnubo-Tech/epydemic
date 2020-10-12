@@ -1,7 +1,9 @@
 import logging
 import matplotlib.pyplot as plt
+import numpy as np
 
-from src.environment import Status, Society
+from src.environment.society import Society
+from src.environment.disease import Status
 from src.geometry.geometry import Geometry
 
 from src.simulation import (
@@ -13,6 +15,8 @@ from src.simulation import (
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+np.random.seed(0)
 
 
 def run():
