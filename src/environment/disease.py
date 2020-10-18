@@ -1,6 +1,6 @@
-from enum import Enum
-
 import numpy as np
+
+from src.environment.status import Status
 
 from src.simulation import (
     Time,
@@ -17,13 +17,6 @@ from src.simulation import (
     VIRAL_STICKINESS,
     VIRAL_UNLOADING_RATE,
 )
-
-
-class Status(Enum):
-    Infected = "red"
-    Immune = "darkgreen"
-    Healthy = "blue"
-    Confined = "orange"
 
 
 class Disease:

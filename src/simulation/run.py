@@ -10,7 +10,8 @@ from src.simulation import (
     Graph, Time, POPULATION, HEALTHY_PC, INFECTED_PC,
     RECOVERY_TIME_DAYS, IMMUNITY_SHIELD_TIME_DAYS,
     IMMUNITY_PROBABILITY, IMMUNITY_LOSS_PROBABILITY,
-    CONFINED_PROBABILITY, VIRAL_STICKINESS
+    CONFINED_PROBABILITY, VIRAL_STICKINESS,
+    PLOT_PARAMETERS
 )
 
 logger = logging.getLogger(__name__)
@@ -27,31 +28,35 @@ def run():
     )
 
     plt.ion()
-    fig = plt.figure()
-    gs = fig.add_gridspec(3, 4)
-    ax1 = fig.add_subplot(gs[:, -2:])
-    ax2 = fig.add_subplot(gs[1:, :-2])
-    ax3 = fig.add_subplot(gs[0, :-2])
+
+    fig, axis = Graph.generate_fig_ax(show_params=PLOT_PARAMETERS)
+
+    # fig = plt.figure()
+    # gs = fig.add_gridspec(3, 4)
+    # ax1 = fig.add_subplot(gs[:, -2:])
+    # ax2 = fig.add_subplot(gs[1:, :-2])
+    # ax3 = fig.add_subplot(gs[0, :-2])
 
     times = []
     society_progress = {st.name: [] for st in Status}
     time = 0
 
-    ax1.set_xlabel('time [days]')
-    ax1.set_ylabel('N')
+    axis[0].set_xlabel('time [days]')
+    axis[0].set_ylabel('N')
 
-    table_params = {
-        "Population": POPULATION,
-        "Time scale [h]": Time.STEP_HOUR,
-        "Mean recovery time [days]": RECOVERY_TIME_DAYS,
-        "Mean immunity shield [days]": IMMUNITY_SHIELD_TIME_DAYS,
-        "Immunity probability": IMMUNITY_PROBABILITY,
-        "Loss immunity probability": IMMUNITY_LOSS_PROBABILITY,
-        "Confined probability": CONFINED_PROBABILITY,
-        "Viral stickiness": VIRAL_STICKINESS
-    }
+    if PLOT_PARAMETERS:
+        table_params = {
+            "Population": POPULATION,
+            "Time scale [h]": Time.STEP_HOUR,
+            "Mean recovery time [days]": RECOVERY_TIME_DAYS,
+            "Mean immunity shield [days]": IMMUNITY_SHIELD_TIME_DAYS,
+            "Immunity probability": IMMUNITY_PROBABILITY,
+            "Loss immunity probability": IMMUNITY_LOSS_PROBABILITY,
+            "Confined probability": CONFINED_PROBABILITY,
+            "Viral stickiness": VIRAL_STICKINESS
+        }
 
-    Graph.plot_table_params(axis=ax3, params_dict=table_params)
+        Graph.plot_table_params(ax=axis[2], params_dict=table_params)
 
     iteration = 0
     for dt in range(2000):
@@ -65,11 +70,11 @@ def run():
             times.append(time / 3600 / 24)
             for st in Status:
                 society_progress[st.name].append(society_status[st.name] / society_status["Total"])
-                ax1.plot(times, society_progress[st.name], c=st.value, ls='-', label=st.name)
+                axis[0].plot(times, society_progress[st.name], c=st.value, ls='-', label=st.name)
 
-            ax1.set_ylim(0, Geometry.Box.Ly)
+            axis[0].set_ylim(0, Geometry.Box.Ly)
 
-            society.plot(ax2)
+            society.plot(axis[1])
 
             plt.show()
             logger.info(f"| {time / 3600}h - "
@@ -79,7 +84,7 @@ def run():
                         f"confined: {res[Status.Confined.name]}")
 
         if iteration == 0:
-            ax1.legend(loc=2)
+            axis[0].legend(loc=2)
 
         if iteration == 0 or (iteration == 10):
             iteration = 1

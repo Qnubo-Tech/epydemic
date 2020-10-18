@@ -32,6 +32,7 @@ IMMUNITY_SHIELD_TIME_DAYS = config.getfloat('disease.properties', 'immunity_shie
 IMMUNITY_SHIELD_TIME = config.getfloat('disease.properties', 'immunity_shield_days') * 24 * 3600
 IMMUNITY_SHIELD_TIME_ERR = config.getfloat('disease.properties', 'immunity_shield_err_days') * 24 * 3600
 
+PLOT_PARAMETERS = config.getboolean('graph', 'plot_parameters')
 
 class Time:
     STEP_SEC = config.getfloat('simulation', 'time_scale')

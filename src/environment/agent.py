@@ -1,8 +1,9 @@
 import numpy as np
 
 from src.geometry import Geometry
-from src.environment.disease import Disease, Status
+from src.environment.disease import Disease
 from src.environment.mobility import MobilityFactory, MobilityType
+from src.environment.status import Status
 from src.simulation import Time, INFECTION_RADIUS
 
 
@@ -46,22 +47,6 @@ class Agent:
 
     def _set_initial_viral_load(self):
         return 1 if self.status == Status.Infected else 0
-
-    # def _random_step(self):
-    #     return np.random.normal(0, self.mobility * Time.STEP_SEC, size=2)
-    #
-    # def _update_position(self):
-    #
-    #     if StochasticParams.MOBILITY_HOURS:
-    #
-    #         hour = (self.t_alive / Time.STEP_SEC) % 24
-    #         if hour <= MOBILITTY_HOURS_THRESHOLD:
-    #             return self._random_step()
-    #         else:
-    #             return np.zeros_like(self.position)
-    #
-    #     else:
-    #         return self._random_step()
 
     def _apply_boundary_conditions(self):
 

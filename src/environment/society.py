@@ -6,7 +6,8 @@ import numpy as np
 
 
 from src.geometry import Geometry
-from src.environment import Agent, Status
+from src.environment.agent import Agent
+from src.environment.status import Status
 from src.environment.mobility import MobilityType
 from src.simulation import AVERAGE_MOBILITY, MOBILITY_TYPE
 
