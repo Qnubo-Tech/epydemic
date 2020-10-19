@@ -3,6 +3,6 @@ from enum import Enum
 
 class Status(Enum):
     Infected = "red"
-    Immune = "darkgreen"
     Healthy = "blue"
+    Immune = "darkgreen"
     Confined = "orange"

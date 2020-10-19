@@ -43,6 +43,8 @@ def run():
 
     axis[0].set_xlabel('time [days]')
     axis[0].set_ylabel('N')
+    axis[0].spines['right'].set_visible(False)
+    axis[0].spines['top'].set_visible(False)
 
     if PLOT_PARAMETERS:
         table_params = {
@@ -63,28 +65,88 @@ def run():
         society.make_step()
 
         if iteration == 0 or (iteration == 10):
-            res = society.get_status()
+            axis[0].clear()
 
             society_status = society.get_status()
+            cumulative_status = society.get_cumulative_status()
+
 
             times.append(time / 3600 / 24)
             for st in Status:
-                society_progress[st.name].append(society_status[st.name] / society_status["Total"])
-                axis[0].plot(times, society_progress[st.name], c=st.value, ls='-', label=st.name)
+                #society_progress[st.name].append(society_status[st.name] / society_status["Total"])
+                society_progress[st.name].append(cumulative_status[st.name])
+                #axis[0].plot(times, society_progress[st.name], c=st.value, ls='-', label=st.name)
+
+            axis[0].fill_between(
+                times, 0, society_progress[Status.Infected.name],
+                color=Status.Infected.value,
+                label=Status.Infected.name,
+                alpha=0.7
+            )
+
+            axis[0].fill_between(
+                times, society_progress[Status.Infected.name], society_progress[Status.Healthy.name],
+                color=Status.Healthy.value,
+                label=Status.Healthy.name,
+                alpha=0.7
+            )
+
+            axis[0].fill_between(
+                times, society_progress[Status.Healthy.name], society_progress[Status.Immune.name],
+                color=Status.Immune.value,
+                label=Status.Immune.name,
+                alpha=0.7
+            )
+
+            axis[0].fill_between(
+                times, society_progress[Status.Immune.name], society_progress[Status.Confined.name],
+                color=Status.Confined.value,
+                label=Status.Confined.name,
+                alpha=0.7
+            )
+
+            axis[0].text(
+                times[-1], 1/2 *(0 + cumulative_status[Status.Infected.name]),
+                r"{0:.2f}".format(society_status[Status.Infected.name] / len(society.agents)),
+                size=10,
+                color=Status.Infected.value
+            )
+
+            # axis[0].text(
+            #     times[-1], 1/2 * (society_status[Status.Infected.name] + society_status[Status.Infected.name]) / 2,
+            #     r"{0:.2f}".format(society_progress[Status.Healthy.name][-1]),
+            #     size=10,
+            #     color=Status.Healthy.value
+            # )
+            #
+            # axis[0].text(
+            #     times[-1], (healthy_level[-1] + immune_level[-1]) / 2,
+            #     r"{0:.2f}".format(society_progress[Status.Immune.name][-1]),
+            #     size=10,
+            #     color=Status.Immune.value
+            # )
+            #
+            # axis[0].text(
+            #     times[-1], (immune_level[-1] + confined_level[-1]) / 2,
+            #     r"{0:.2f}".format(society_progress[Status.Confined.name][-1]),
+            #     size=10,
+            #     color=Status.Confined.value
+            # )
 
             axis[0].set_ylim(0, Geometry.Box.Ly)
+            axis[0].legend(loc=2)
 
             society.plot(axis[1])
 
             plt.show()
             logger.info(f"| {time / 3600}h - "
-                        f"infected: {res[Status.Infected.name]}, "
-                        f"healthy: {res[Status.Healthy.name]}, "
-                        f"immune: {res[Status.Immune.name]}, "
-                        f"confined: {res[Status.Confined.name]}")
+                        f"infected: {society_status[Status.Infected.name]}, "
+                        f"healthy: {society_status[Status.Healthy.name]}, "
+                        f"immune: {society_status[Status.Immune.name]}, "
+                        f"confined: {society_status[Status.Confined.name]}")
 
-        if iteration == 0:
-            axis[0].legend(loc=2)
+        # if iteration == 0:
+        #     axis[0].legend(loc=2)
 
         if iteration == 0 or (iteration == 10):
             iteration = 1

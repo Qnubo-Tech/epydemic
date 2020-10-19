@@ -77,6 +77,10 @@ class Disease:
                 p=[IMMUNITY_PROBABILITY, (1-IMMUNITY_PROBABILITY)]
             )
 
+            #TODO: Assess the viral load when becoming Healthy
+            # if (n_status == Status.Healthy):
+            #     self.viral_load *= 0.5
+
             self.t_infected = 0
             return n_status
 

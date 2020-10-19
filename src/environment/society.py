@@ -105,3 +105,16 @@ class Society:
         status_dict = {st.name: self.count_statuses(st) for st in Status}
         status_dict["Total"] = sum(status_dict.values())
         return status_dict
+
+    def get_cumulative_status(self):
+
+        status_dict = {}
+        previous_status = None
+        for st in Status:
+            status_dict[st.name] = self.count_statuses(status=st) / len(self.agents)
+            if previous_status:
+                status_dict[st.name] += status_dict[previous_status.name]
+
+            previous_status = st
+
+        return status_dict
