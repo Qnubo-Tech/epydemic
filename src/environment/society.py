@@ -111,7 +111,7 @@ class Society:
         status_dict = {}
         previous_status = None
         for st in Status:
-            status_dict[st.name] = self.count_statuses(status=st) / len(self.agents)
+            status_dict[st.name] = self.count_statuses(status=st) / self.population
             if previous_status:
                 status_dict[st.name] += status_dict[previous_status.name]
 

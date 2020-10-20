@@ -70,68 +70,34 @@ def run():
             society_status = society.get_status()
             cumulative_status = society.get_cumulative_status()
 
-
             times.append(time / 3600 / 24)
+            previous_status = None
             for st in Status:
+                # lines
                 #society_progress[st.name].append(society_status[st.name] / society_status["Total"])
-                society_progress[st.name].append(cumulative_status[st.name])
                 #axis[0].plot(times, society_progress[st.name], c=st.value, ls='-', label=st.name)
 
-            axis[0].fill_between(
-                times, 0, society_progress[Status.Infected.name],
-                color=Status.Infected.value,
-                label=Status.Infected.name,
-                alpha=0.7
-            )
+                # stacked areas
+                society_progress[st.name].append(cumulative_status[st.name])
 
-            axis[0].fill_between(
-                times, society_progress[Status.Infected.name], society_progress[Status.Healthy.name],
-                color=Status.Healthy.value,
-                label=Status.Healthy.name,
-                alpha=0.7
-            )
+                if previous_status:
+                    lower_limit = society_progress[previous_status.name]
+                else:
+                    lower_limit = [0]
 
-            axis[0].fill_between(
-                times, society_progress[Status.Healthy.name], society_progress[Status.Immune.name],
-                color=Status.Immune.value,
-                label=Status.Immune.name,
-                alpha=0.7
-            )
+                axis[0].fill_between(
+                    x=times, y1=lower_limit, y2=society_progress[st.name],
+                    color=st.value, label=st.name, alpha=0.25
+                )
 
-            axis[0].fill_between(
-                times, society_progress[Status.Immune.name], society_progress[Status.Confined.name],
-                color=Status.Confined.value,
-                label=Status.Confined.name,
-                alpha=0.7
-            )
+                axis[0].text(
+                    x=times[-1], y=1/2 * (lower_limit[-1] + cumulative_status[st.name]),
+                    s=r"{0:.2f}".format(cumulative_status[st.name] - lower_limit[-1]),
+                    size=10,
+                    color=st.value
+                )
 
-            axis[0].text(
-                times[-1], 1/2 *(0 + cumulative_status[Status.Infected.name]),
-                r"{0:.2f}".format(society_status[Status.Infected.name] / len(society.agents)),
-                size=10,
-                color=Status.Infected.value
-            )
-
-            # axis[0].text(
-            #     times[-1], 1/2 * (society_status[Status.Infected.name] + society_status[Status.Infected.name]) / 2,
-            #     r"{0:.2f}".format(society_progress[Status.Healthy.name][-1]),
-            #     size=10,
-            #     color=Status.Healthy.value
-            # )
-            #
-            # axis[0].text(
-            #     times[-1], (healthy_level[-1] + immune_level[-1]) / 2,
-            #     r"{0:.2f}".format(society_progress[Status.Immune.name][-1]),
-            #     size=10,
-            #     color=Status.Immune.value
-            # )
-            #
-            # axis[0].text(
-            #     times[-1], (immune_level[-1] + confined_level[-1]) / 2,
-            #     r"{0:.2f}".format(society_progress[Status.Confined.name][-1]),
-            #     size=10,
-            #     color=Status.Confined.value
-            # )
+                previous_status = st
 
             axis[0].set_ylim(0, Geometry.Box.Ly)
             axis[0].legend(loc=2)
@@ -144,9 +110,6 @@ def run():
                         f"healthy: {society_status[Status.Healthy.name]}, "
                         f"immune: {society_status[Status.Immune.name]}, "
                         f"confined: {society_status[Status.Confined.name]}")
-
-        # if iteration == 0:
-        #     axis[0].legend(loc=2)
 
         if iteration == 0 or (iteration == 10):
             iteration = 1
