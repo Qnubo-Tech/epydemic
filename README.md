@@ -12,6 +12,25 @@ In this unified effort against the virus, the researching community is relying u
 
 The idea of this work and repository is to provide the scientific community with a free and open-source computational model which is capable of reproducing SIR-like curves when the input configuration is set to its simplest version, and many more complex behaviours (e.g. resonant and intermittent infectious modes) when social measures are taken into consideration. This is a toy model, but can become as complex as you want it to be, as it is open for your use and improvement. 
 
+### Model
+
+The model introduced in this repository consists in an agent-based approach which endows the *agent* with human-like properties and behaviours. An **agent** consists of the following basic attributes:
+
+* **Position**: This is a tuple with the coordinates of the agent on the XY-plane. The agent moves around in the geometry (where it is initially set) by using the method **step**. With the aim of inducing a reasonably simple model for human motion, we have chosen a Brownian-particle dynamics, which variance fulfils an average behaviour of a human being.
+* **Mobility**: The mobility modulates the size of the random displacement per unit time, which is set up by default to a "normal" human behaviour.
+* **Status**: A variable which identifies the status of the agent, this being either **healthy**, **infected**, **immune** or **confined** with the aim or reflect the states of the population. The status of the agent will be reflected in its colour when represented, e.g:
+  * <img src="images/infected.png" alt="infected" height="35" width="40"/>*Infected agent*: The circle intensity is maximum and the radius is equivalent (in reduced units) to two meters.
+  * <img src="images/healthy-interacting.png" alt="healthy-interacting" height="37" width="40" />*Healthy agents* walking nearby
+
+Besides, the agent is endowed with the following *actions*/methods:
+
+* **Step**: The function which updates the current position of the agent by randomly choosing a sample from a normal distribution.
+* **Viral force**: The intensity of viral load which an agent will suffer due to the ambient viral presence. 
+
+### Results
+
+[TBC]
+
 ## Requirements
 
 The code is written in `Python 3.7`, thus we would expect any python environment ( `Python>=3.7`) to be capable of running the code without any issue. If this is not the case, we encourage and will thank you for telling us about any issue (as described in the contributing section). Besides having the correct **python** version, you'll need to install the packages specified in the [requirements](requirements.txt) file. 
