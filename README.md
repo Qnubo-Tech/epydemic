@@ -14,7 +14,7 @@ The idea of this work and repository is to provide the scientific community with
 
 ## Requirements
 
-[TBC]
+The code is written in `Python 3.7`, thus we would expect any python environment ( `Python>=3.7`) to be capable of running the code without any issue. If this is not the case, we encourage and will thank you for telling us about any issue (as described in the contributing section). Besides having the correct **python** version, you'll need to install the packages specified in the [requirements](requirements.txt) file. 
 
 ## Contributing
 
