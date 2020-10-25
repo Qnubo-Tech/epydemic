@@ -6,10 +6,6 @@ from src.simulation import (
     Time,
     StochasticParams,
     AVERAGE_MOBILITY,
-    RECOVERY_TIME,
-    RECOVERY_TIME_ERR,
-    IMMUNITY_SHIELD_TIME,
-    IMMUNITY_SHIELD_TIME_ERR,
     IMMUNITY_PROBABILITY,
     IMMUNITY_LOSS_PROBABILITY,
     CONFINED_PROBABILITY,
@@ -18,34 +14,21 @@ from src.simulation import (
     VIRAL_UNLOADING_RATE,
 )
 
+from src.environment.disease.immunity import Immunity
+from src.environment.disease.recovery import Recovery
+
 
 class Disease:
 
-    def __init__(self, viral_load: float, radius: float):
+    def __init__(self, viral_load: float, radius: float, immunity: Immunity, recovery: Recovery):
 
         self.viral_load = viral_load
         self.infection_radius = radius
 
-        self.mean_recovery_time = self._set_mean_recovery_time()
-        self.mean_immunity_shield = self._set_mean_immunity_shield()
+        self.mean_recovery_time = recovery.duration
+        self.mean_immunity_shield = immunity.duration
 
         self.t_infected, self.t_immunized = (0, 0)
-
-    @staticmethod
-    def _set_mean_recovery_time():
-
-        if StochasticParams.MEAN_RECOVERY_TIME:
-            return max(0, np.random.normal(loc=RECOVERY_TIME, scale=RECOVERY_TIME_ERR))
-        else:
-            return RECOVERY_TIME
-
-    @staticmethod
-    def _set_mean_immunity_shield():
-
-        if StochasticParams.MEAN_IMMUNITY_SHIELD_TIME:
-            return max(0, np.random.normal(loc=IMMUNITY_SHIELD_TIME, scale=IMMUNITY_SHIELD_TIME_ERR))
-        else:
-            return IMMUNITY_SHIELD_TIME
 
     def _update_infection_times(self, status: Status):
 

@@ -48,6 +48,7 @@ VIRAL_UNLOADING_RATE = config.getfloat('disease.properties', 'viral_unloading_ra
 
 PLOT_PARAMETERS = config.getboolean('graph', 'plot_parameters')
 
+
 class StochasticParams:
     MOBILITY_HOURS = False
     MEAN_RECOVERY_TIME = False

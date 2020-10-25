@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.geometry import Geometry
-from src.environment.disease import Disease
+from src.environment.disease import Disease, Immunity, Recovery
 from src.environment.mobility import MobilityFactory, MobilityType
 from src.environment.status import Status
 from src.simulation import Time, INFECTION_RADIUS
@@ -22,7 +22,10 @@ class Agent:
 
         self.status = status
         initial_viral_load = self._set_initial_viral_load()
-        self.disease = Disease(viral_load=initial_viral_load, radius=INFECTION_RADIUS)
+        self.disease = Disease(viral_load=initial_viral_load,
+                               radius=INFECTION_RADIUS,
+                               immunity=Immunity(),
+                               recovery=Recovery())
 
         self.t_alive = 0
 
