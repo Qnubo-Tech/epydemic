@@ -30,7 +30,7 @@ class Disease:
 
         self.t_infected, self.t_immunized = (0, 0)
 
-    def _update_infection_times(self, status: Status):
+    def _update_times(self, status: Status):
 
         if (status == Status.Infected) or (status == Status.Confined):
             self.t_infected += Time.STEP_SEC
@@ -137,7 +137,7 @@ class Disease:
 
     def step(self, status: Status, force):
 
-        self._update_infection_times(status=status)
+        self._update_times(status=status)
         new_status = self._update_viral_load(status=status, force=force)
         new_status = self._update_status(status=new_status)
         new_mobility = self._update_mobility(status=new_status)
