@@ -88,23 +88,10 @@ class Disease:
             self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
             return status
 
-    def _update_confined_agents(self, status):
-        if self.infection.time > self.infection.duration:
-            st = np.random.choice(
-                [Status.Immune, Status.Healthy],
-                p=[ImmunityParams.PROBABILITY, (1 - ImmunityParams.PROBABILITY)]
-            )
-
-            self.infection.time = 0
-            return st
-
-        return status
-
     def _update_status(self, status):
         if status == Status.Immune:
             return self.immunity.check_immunity_loss(status)
         elif status == Status.Confined:
-            #return self._update_confined_agents(status)
             return self.infection.check_recovery(status)
         return status
 
