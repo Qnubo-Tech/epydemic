@@ -5,9 +5,8 @@ from src.environment.status import Status
 from src.simulation import (
     Time,
     StochasticParams,
+    ImmunityParams,
     AVERAGE_MOBILITY,
-    IMMUNITY_PROBABILITY,
-    IMMUNITY_LOSS_PROBABILITY,
     CONFINED_PROBABILITY,
     VIRAL_LOAD_INFECTION_THRESHOLD,
     VIRAL_STICKINESS,
@@ -15,32 +14,30 @@ from src.simulation import (
 )
 
 from src.environment.disease.immunity import Immunity
-from src.environment.disease.recovery import Recovery
+from src.environment.disease.infection import Infection
 
 
 class Disease:
 
-    def __init__(self, viral_load: float, radius: float, immunity: Immunity, recovery: Recovery):
+    def __init__(self, viral_load: float, radius: float, immunity: Immunity, infection: Infection):
 
         self.viral_load = viral_load
         self.infection_radius = radius
 
-        self.mean_recovery_time = recovery.duration
-        self.mean_immunity_shield = immunity.duration
-
-        self.t_infected, self.t_immunized = (0, 0)
+        self.immunity = immunity
+        self.infection = infection
 
     def _update_times(self, status: Status):
 
         if (status == Status.Infected) or (status == Status.Confined):
-            self.t_infected += Time.STEP_SEC
+            self.infection.update_time()
         if status == Status.Immune:
-            self.t_immunized += Time.STEP_SEC
+            self.immunity.update_time()
 
     def _update_viral_load(self, status, force):
 
         # Still infected:
-        if (self.t_infected <= self.mean_recovery_time) and (status == Status.Infected):
+        if (self.infection.time <= self.infection.duration) and (status == Status.Infected):
             self.viral_load *= 1
 
             # Check confined status
@@ -52,19 +49,19 @@ class Disease:
             return n_status
 
         # Already passed the disease (but maybe not immune):
-        if (self.t_infected > self.mean_recovery_time) and (status == Status.Infected):
+        if (self.infection.time > self.infection.duration) and (status == Status.Infected):
             self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
 
             n_status = np.random.choice(
                 [Status.Immune, Status.Healthy],
-                p=[IMMUNITY_PROBABILITY, (1-IMMUNITY_PROBABILITY)]
+                p=[ImmunityParams.PROBABILITY, (1 - ImmunityParams.PROBABILITY)]
             )
 
             #TODO: Assess the viral load when becoming Healthy
             # if (n_status == Status.Healthy):
             #     self.viral_load *= 0.5
 
-            self.t_infected = 0
+            self.infection.time = 0
             return n_status
 
         # Healthy moving around
@@ -91,37 +88,25 @@ class Disease:
             self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
             return status
 
-    def _update_immune_agents(self, status):
-        if self.t_immunized > self.mean_immunity_shield:
-            st = np.random.choice(
-                [Status.Healthy, Status.Immune],
-                p=[IMMUNITY_LOSS_PROBABILITY, 1-IMMUNITY_LOSS_PROBABILITY]
-            )
-            if st == Status.Healthy:
-                self.t_immunized = 0
-            return st
-
-        return status
-
     def _update_confined_agents(self, status):
-        if self.t_infected > self.mean_recovery_time:
+        if self.infection.time > self.infection.duration:
             st = np.random.choice(
                 [Status.Immune, Status.Healthy],
-                p=[IMMUNITY_PROBABILITY, (1-IMMUNITY_PROBABILITY)]
+                p=[ImmunityParams.PROBABILITY, (1 - ImmunityParams.PROBABILITY)]
             )
 
-            self.t_infected = 0
+            self.infection.time = 0
             return st
 
         return status
 
     def _update_status(self, status):
         if status == Status.Immune:
-            return self._update_immune_agents(status)
+            return self.immunity.check_immunity_loss(status)
         elif status == Status.Confined:
-            return self._update_confined_agents(status)
+            #return self._update_confined_agents(status)
+            return self.infection.check_recovery(status)
         return status
-        #return status
 
     @staticmethod
     def _get_sick_mobility():

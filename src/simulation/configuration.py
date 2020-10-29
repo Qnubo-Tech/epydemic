@@ -33,13 +33,6 @@ RECOVERY_TIME_DAYS = config.getfloat('disease.properties', 'recovery_time_days')
 RECOVERY_TIME = config.getfloat('disease.properties', 'recovery_time_days') * TimeConverter.DAY_TO_SEC
 RECOVERY_TIME_ERR = config.getfloat('disease.properties', 'recovery_time_err_days') * TimeConverter.DAY_TO_SEC
 
-IMMUNITY_SHIELD_TIME_DAYS = config.getfloat('disease.properties', 'immunity_shield_days')
-IMMUNITY_SHIELD_TIME = config.getfloat('disease.properties', 'immunity_shield_days') * TimeConverter.DAY_TO_SEC
-IMMUNITY_SHIELD_TIME_ERR = config.getfloat('disease.properties', 'immunity_shield_err_days') * TimeConverter.DAY_TO_SEC
-
-IMMUNITY_PROBABILITY = config.getfloat('disease.properties', 'immunity_probability')
-IMMUNITY_LOSS_PROBABILITY = config.getfloat('disease.properties', 'immunity_loss_probability')
-
 CONFINED_PROBABILITY = config.getfloat('disease.properties', 'confined_probability')
 
 VIRAL_LOAD_INFECTION_THRESHOLD = config.getfloat('disease.properties', 'viral_load_infection_threshold')
@@ -51,6 +44,18 @@ PLOT_PARAMETERS = config.getboolean('graph', 'plot_parameters')
 
 class StochasticParams:
     MOBILITY_HOURS = False
-    MEAN_RECOVERY_TIME = False
-    MEAN_IMMUNITY_SHIELD_TIME = False
+    RANDOM_RECOVERY = False
+    RANDOM_IMMUNITY = False
     AVERAGE_MOBILITY_INFECTION = False
+
+
+class ImmunityParams:
+    SHIELD_TIME_DAYS = config.getfloat('disease.immunity', 'immunity_shield_days')
+    SHIELD_TIME = config.getfloat('disease.immunity',
+                                  'immunity_shield_days') * TimeConverter.DAY_TO_SEC
+    SHIELD_TIME_ERR = config.getfloat('disease.immunity',
+                                      'immunity_shield_err_days') * TimeConverter.DAY_TO_SEC
+
+    PROBABILITY = config.getfloat('disease.immunity', 'immunity_probability')
+    LOSS_PROBABILITY = config.getfloat('disease.immunity', 'immunity_loss_probability')
+

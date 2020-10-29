@@ -1,11 +1,11 @@
 from src.simulation.configuration import (
     Time, TimeConverter,
+    ImmunityParams,
     POPULATION, HEALTHY_PC, INFECTED_PC,
     AVERAGE_MOBILITY, MOBILITY_TYPE, MOBILITY_HOURS_THRESHOLD,
     INFECTION_RADIUS,
     RECOVERY_TIME_DAYS, RECOVERY_TIME, RECOVERY_TIME_ERR,
-    IMMUNITY_SHIELD_TIME_DAYS, IMMUNITY_SHIELD_TIME, IMMUNITY_SHIELD_TIME_ERR,
-    IMMUNITY_PROBABILITY, IMMUNITY_LOSS_PROBABILITY, CONFINED_PROBABILITY,
+    CONFINED_PROBABILITY,
     VIRAL_LOAD_INFECTION_THRESHOLD, VIRAL_STICKINESS, VIRAL_UNLOADING_RATE
 )
 
@@ -25,6 +25,14 @@ def test_Time():
     assert Time.STEP_HOUR == 1
 
 
+def test_ImmunityParams():
+    assert ImmunityParams.SHIELD_TIME_DAYS == 10
+    assert ImmunityParams.SHIELD_TIME == 10 * 24 * 3600
+    assert ImmunityParams.SHIELD_TIME_ERR == 5 * 24 * 3600
+    assert ImmunityParams.PROBABILITY == 0.8
+    assert ImmunityParams.LOSS_PROBABILITY == 0.5
+
+
 def test_config_values():
     assert POPULATION == 54
     assert HEALTHY_PC == 0.99
@@ -36,11 +44,6 @@ def test_config_values():
     assert RECOVERY_TIME_DAYS == 7
     assert RECOVERY_TIME == 7 * 24 * 3600
     assert RECOVERY_TIME_ERR == 1 * 24 * 3600
-    assert IMMUNITY_SHIELD_TIME_DAYS == 10
-    assert IMMUNITY_SHIELD_TIME == 10 * 24 * 3600
-    assert IMMUNITY_SHIELD_TIME_ERR == 5 * 24 * 3600
-    assert IMMUNITY_PROBABILITY == 0.8
-    assert IMMUNITY_LOSS_PROBABILITY == 0.5
     assert CONFINED_PROBABILITY == 0.01
     assert VIRAL_LOAD_INFECTION_THRESHOLD == 0.9
     assert VIRAL_STICKINESS == 0.3
