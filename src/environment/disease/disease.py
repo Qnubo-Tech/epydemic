@@ -2,16 +2,7 @@ import numpy as np
 
 from src.environment.status import Status
 
-from src.simulation import (
-    Time,
-    StochasticParams,
-    ImmunityParams,
-    AVERAGE_MOBILITY,
-    CONFINED_PROBABILITY,
-    VIRAL_LOAD_INFECTION_THRESHOLD,
-    VIRAL_STICKINESS,
-    VIRAL_UNLOADING_RATE,
-)
+from src.simulation import DiseaseParams
 
 from src.environment.disease.immunity import Immunity
 from src.environment.disease.infection import Infection
@@ -34,88 +25,69 @@ class Disease:
         if status == Status.Immune:
             self.immunity.update_time()
 
-    def _update_viral_load(self, status, force):
+    def _keep_viral_load(self):
+        self.viral_load *= 1
 
-        # Still infected:
-        if (self.infection.time <= self.infection.duration) and (status == Status.Infected):
-            self.viral_load *= 1
+    def _unload_viral_load(self):
+        self.viral_load *= np.exp(-DiseaseParams.VIRAL_UNLOADING_RATE)
 
-            # Check confined status
-            n_status = np.random.choice(
-                [Status.Confined, Status.Infected],
-                p=[CONFINED_PROBABILITY, (1-CONFINED_PROBABILITY)]
-            )
+    def _increase_viral_load(self, force: float):
+        self.viral_load += DiseaseParams.VIRAL_STICKINESS * force
+        self.viral_load = min(self.viral_load, 1.0)
 
-            return n_status
+    def _update_dynamics(self, status: Status, force: float):
 
-        # Already passed the disease (but maybe not immune):
-        if (self.infection.time > self.infection.duration) and (status == Status.Infected):
-            self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
+        if status == Status.Infected:
 
-            n_status = np.random.choice(
-                [Status.Immune, Status.Healthy],
-                p=[ImmunityParams.PROBABILITY, (1 - ImmunityParams.PROBABILITY)]
-            )
+            if self.infection.time <= self.infection.duration:
+                self._keep_viral_load()
+                return self.infection.check_confinement()
 
-            #TODO: Assess the viral load when becoming Healthy
-            # if (n_status == Status.Healthy):
-            #     self.viral_load *= 0.5
+            else:
+                self._unload_viral_load()
+                return self.infection.check_recovery()
 
-            self.infection.time = 0
-            return n_status
-
-        # Healthy moving around
         if status == Status.Healthy:
             # Getting some infection:
             if force != 0:
-                self.viral_load += VIRAL_STICKINESS * force
-                self.viral_load = min(self.viral_load, 1.0)
+                self._increase_viral_load(force=force)
 
             # Unloading because it left the dangerous region:
             else:
-                self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
+                self._unload_viral_load()
 
-            # Is is already infected?:
-            if self.viral_load > VIRAL_LOAD_INFECTION_THRESHOLD:
-                #self.viral_load = 1
+            # Is it already infected?:
+            if self.viral_load > DiseaseParams.VIRAL_LOAD_INFECTION_THRESHOLD:
                 return Status.Infected
 
             # It's still healthy:
             return status
 
-        # For the immunes and confined
-        else:
-            self.viral_load *= np.exp(-VIRAL_UNLOADING_RATE)
-            return status
-
-    def _update_status(self, status):
         if status == Status.Immune:
-            return self.immunity.check_immunity_loss(status)
-        elif status == Status.Confined:
-            return self.infection.check_recovery(status)
-        return status
+            self._unload_viral_load()
 
-    @staticmethod
-    def _get_sick_mobility():
-        if StochasticParams.AVERAGE_MOBILITY_INFECTION:
-            return np.random.choice([1, 0], p=[0.8, 0.2])*AVERAGE_MOBILITY
-        else:
-            return AVERAGE_MOBILITY
+            if self.immunity.time > self.immunity.duration:
+                return self.immunity.check_immunity_loss()
 
-    def _update_mobility(self, status):
-        return (status == Status.Infected) * self._get_sick_mobility() \
-               + (status == Status.Confined) * 0 \
-               + (status != Status.Infected and status != Status.Confined) * AVERAGE_MOBILITY
+            else:
+                return status
 
-    def step(self, status: Status, force):
+        if status == Status.Confined:
+            self._unload_viral_load()
+
+            if self.infection.time > self.infection.duration:
+                return self.infection.check_recovery()
+
+            else:
+                return status
+
+    def step(self, status: Status, force: float):
 
         self._update_times(status=status)
-        new_status = self._update_viral_load(status=status, force=force)
-        new_status = self._update_status(status=new_status)
-        new_mobility = self._update_mobility(status=new_status)
-        return new_status, new_mobility
+        new_status = self._update_dynamics(status=status, force=force)
+        return new_status
 
-    def force(self, position: np.array, agent_position: np.array):
+    def force(self, position: np.array, agent_position: np.array) -> float:
 
         return np.any(position != agent_position) * \
                ((np.linalg.norm(position - agent_position) <= self.infection_radius) * self.viral_load)

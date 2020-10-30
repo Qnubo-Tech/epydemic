@@ -5,15 +5,15 @@ from src.environment.status import Status
 from src.simulation import (
     StochasticParams,
     ImmunityParams,
-    RECOVERY_TIME, RECOVERY_TIME_ERR
+    InfectionParams
 )
 
 
 class Infection(DiseaseParameter):
 
     def __init__(self,
-                 mean_duration: float = RECOVERY_TIME,
-                 std_duration: float = RECOVERY_TIME_ERR):
+                 mean_duration: float = InfectionParams.RECOVERY_TIME,
+                 std_duration: float = InfectionParams.RECOVERY_TIME_ERR):
 
         super().__init__(mean_duration, std_duration)
 
@@ -24,14 +24,19 @@ class Infection(DiseaseParameter):
         else:
             return self.default_value
 
-    def check_recovery(self, status) -> Status:
-        if self.time > self.duration:
-            st = choice(
-                [Status.Immune, Status.Healthy],
-                p=[ImmunityParams.PROBABILITY, (1 - ImmunityParams.PROBABILITY)]
-            )
+    def check_confinement(self) -> Status:
+        st = choice(
+            [Status.Confined, Status.Infected],
+            p=[InfectionParams.CONFINED_PROBABILITY, (1 - InfectionParams.CONFINED_PROBABILITY)]
+        )
 
-            self.time = 0
-            return st
+        return st
 
-        return status
+    def check_recovery(self) -> Status:
+        st = choice(
+            [Status.Immune, Status.Healthy],
+            p=[ImmunityParams.PROBABILITY, (1 - ImmunityParams.PROBABILITY)]
+        )
+
+        self.time = 0
+        return st

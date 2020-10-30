@@ -8,17 +8,17 @@ from src.geometry.geometry import Geometry
 
 from src.simulation import (
     Graph, Time, TimeConverter,
+    DiseaseParams,
     ImmunityParams,
+    InfectionParams,
     POPULATION, HEALTHY_PC, INFECTED_PC,
-    RECOVERY_TIME_DAYS,
-    CONFINED_PROBABILITY, VIRAL_STICKINESS,
     PLOT_PARAMETERS
 )
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
-np.random.seed(0)
+np.random.seed(72)
 
 
 def run():
@@ -45,12 +45,12 @@ def run():
         table_params = {
             "Population": POPULATION,
             "Time scale [h]": Time.STEP_HOUR,
-            "Mean recovery time [days]": RECOVERY_TIME_DAYS,
+            "Mean recovery time [days]": InfectionParams.RECOVERY_TIME_DAYS,
             "Mean immunity shield [days]": ImmunityParams.SHIELD_TIME_DAYS,
             "Immunity probability": ImmunityParams.PROBABILITY,
             "Loss immunity probability": ImmunityParams.LOSS_PROBABILITY,
-            "Confined probability": CONFINED_PROBABILITY,
-            "Viral stickiness": VIRAL_STICKINESS
+            "Confined probability": InfectionParams.CONFINED_PROBABILITY,
+            "Viral stickiness": DiseaseParams.VIRAL_STICKINESS
         }
 
         Graph.plot_table_params(ax=axis[2], params_dict=table_params)
@@ -66,14 +66,14 @@ def run():
             cumulative_status = society.get_cumulative_status()
 
             times.append(time / TimeConverter.DAY_TO_SEC)
-            Graph.plot_areas_society_progress(ax=axis[0],
+            # Graph.plot_areas_society_progress(ax=axis[0],
+            #                                   time_array=times,
+            #                                   society_snapshot=cumulative_status,
+            #                                   society_progress=society_progress)
+            Graph.plot_lines_society_progress(ax=axis[0],
                                               time_array=times,
-                                              society_snapshot=cumulative_status,
+                                              society_snapshot=society_status,
                                               society_progress=society_progress)
-            # Graph.plot_lines_society_progress(ax=axis[0],
-            #                          time_array=times,
-            #                          society_snapshot=society_status,
-            #                          society_progress=society_progress)
 
             axis[0].set_ylim(0, Geometry.Box.Ly)
             axis[0].legend(loc=2)

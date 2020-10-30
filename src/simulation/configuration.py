@@ -23,21 +23,7 @@ POPULATION = config.getfloat('simulation', 'population')
 HEALTHY_PC = config.getfloat('simulation', 'healthy')
 INFECTED_PC = config.getfloat('simulation', 'infected')
 
-AVERAGE_MOBILITY = config.getfloat('agent.properties', 'mobility')
-MOBILITY_TYPE = config.get('agent.properties', 'mobility_type').lower()
-MOBILITY_HOURS_THRESHOLD = config.getint('agent.properties', 'mobility_hours')
 
-INFECTION_RADIUS = config.getfloat('disease.properties', 'infection_radius')
-
-RECOVERY_TIME_DAYS = config.getfloat('disease.properties', 'recovery_time_days')
-RECOVERY_TIME = config.getfloat('disease.properties', 'recovery_time_days') * TimeConverter.DAY_TO_SEC
-RECOVERY_TIME_ERR = config.getfloat('disease.properties', 'recovery_time_err_days') * TimeConverter.DAY_TO_SEC
-
-CONFINED_PROBABILITY = config.getfloat('disease.properties', 'confined_probability')
-
-VIRAL_LOAD_INFECTION_THRESHOLD = config.getfloat('disease.properties', 'viral_load_infection_threshold')
-VIRAL_STICKINESS = config.getfloat('disease.properties', 'viral_stickiness')
-VIRAL_UNLOADING_RATE = config.getfloat('disease.properties', 'viral_unloading_rate')
 
 PLOT_PARAMETERS = config.getboolean('graph', 'plot_parameters')
 
@@ -47,6 +33,15 @@ class StochasticParams:
     RANDOM_RECOVERY = False
     RANDOM_IMMUNITY = False
     AVERAGE_MOBILITY_INFECTION = False
+
+
+class DiseaseParams:
+    INFECTION_RADIUS = config.getfloat('disease.parameters', 'infection_radius')
+
+    VIRAL_LOAD_INFECTION_THRESHOLD = config.getfloat('disease.parameters',
+                                                     'viral_load_infection_threshold')
+    VIRAL_STICKINESS = config.getfloat('disease.parameters', 'viral_stickiness')
+    VIRAL_UNLOADING_RATE = config.getfloat('disease.parameters', 'viral_unloading_rate')
 
 
 class ImmunityParams:
@@ -59,3 +54,19 @@ class ImmunityParams:
     PROBABILITY = config.getfloat('disease.immunity', 'immunity_probability')
     LOSS_PROBABILITY = config.getfloat('disease.immunity', 'immunity_loss_probability')
 
+
+class InfectionParams:
+    RECOVERY_TIME_DAYS = config.getfloat('disease.infection', 'recovery_time_days')
+    RECOVERY_TIME = config.getfloat('disease.infection',
+                                    'recovery_time_days') * TimeConverter.DAY_TO_SEC
+    RECOVERY_TIME_ERR = config.getfloat('disease.infection',
+                                        'recovery_time_err_days') * TimeConverter.DAY_TO_SEC
+
+    CONFINED_PROBABILITY = config.getfloat('disease.infection', 'confined_probability')
+
+
+class MobilityParams:
+    DEFAULT_MOBILITY = config.getfloat('agent.mobility', 'mobility')
+    RESTRICTION_PROBABILITY = config.getfloat('agent.mobility', 'restricted_probability')
+    MOBILITY_TYPE = config.get('agent.mobility', 'mobility_type').lower()
+    CURFEW_THRESHOLD = config.getint('agent.mobility', 'curfew_threshold')

@@ -23,14 +23,11 @@ class Immunity(DiseaseParameter):
         else:
             return self.default_value
 
-    def check_immunity_loss(self, status: Status) -> Status:
-        if self.time > self.duration:
-            st = choice(
-                [Status.Healthy, Status.Immune],
-                p=[ImmunityParams.LOSS_PROBABILITY, 1 - ImmunityParams.LOSS_PROBABILITY]
-            )
-            if st == Status.Healthy:
-                self.time = 0
-            return st
-
-        return status
+    def check_immunity_loss(self) -> Status:
+        st = choice(
+            [Status.Healthy, Status.Immune],
+            p=[ImmunityParams.LOSS_PROBABILITY, 1 - ImmunityParams.LOSS_PROBABILITY]
+        )
+        if st == Status.Healthy:
+            self.time = 0
+        return st

@@ -9,7 +9,7 @@ from src.geometry import Geometry
 from src.environment.agent import Agent
 from src.environment.status import Status
 from src.environment.mobility import MobilityType
-from src.simulation import AVERAGE_MOBILITY, MOBILITY_TYPE
+from src.simulation import MobilityParams
 
 
 class Society:
@@ -27,27 +27,27 @@ class Society:
         infected = max(1, round(initial_condition['infected']*self.population))
         immune = self.population - healthy - infected
 
-        mobility_type = MobilityType[MOBILITY_TYPE]
+        mobility_type = MobilityType[MobilityParams.MOBILITY_TYPE]
 
         [agents.append(
             Agent(x=random.uniform(0, Geometry.Box.Lx),
                   y=random.uniform(0, Geometry.Box.Ly),
                   status=Status.Healthy,
-                  mobility_value=AVERAGE_MOBILITY,
+                  mobility_value=MobilityParams.DEFAULT_MOBILITY,
                   mobility_type=mobility_type))
             for i in range(healthy)
         ], [agents.append(
             Agent(x=random.uniform(0, Geometry.Box.Lx),
                   y=random.uniform(0, Geometry.Box.Ly),
                   status=Status.Infected,
-                  mobility_value=AVERAGE_MOBILITY,
+                  mobility_value=MobilityParams.DEFAULT_MOBILITY,
                   mobility_type=mobility_type))
             for i in range(infected)
         ], [agents.append(
             Agent(x=random.uniform(0, Geometry.Box.Lx),
                   y=random.uniform(0, Geometry.Box.Ly),
                   status=Status.Immune,
-                  mobility_value=AVERAGE_MOBILITY,
+                  mobility_value=MobilityParams.DEFAULT_MOBILITY,
                   mobility_type=mobility_type))
             for i in range(immune)
         ]
@@ -56,7 +56,7 @@ class Society:
 
     def make_step(self):
 
-        Parallel(n_jobs=10, prefer="threads")(
+        Parallel(n_jobs=-10, prefer="threads")(
             delayed(agent.step)(self.force_field(agent.position)) for agent in self.agents
         )
 
