@@ -4,7 +4,7 @@ from src.geometry import Geometry
 from src.environment.disease import Disease, Immunity, Infection
 from src.environment.mobility import MobilityFactory, MobilityType
 from src.environment.status import Status
-from src.simulation import Time, DiseaseParams
+from src.configuration import Time, DiseaseParams
 
 
 class Agent:

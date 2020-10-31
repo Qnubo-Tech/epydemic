@@ -2,7 +2,7 @@ from numpy.random import choice
 
 from src.environment.disease.parameter import DiseaseParameter
 from src.environment.status import Status
-from src.simulation import (
+from src.configuration import (
     StochasticParams,
     ImmunityParams
 )

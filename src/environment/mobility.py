@@ -4,7 +4,7 @@ import numpy as np
 
 from src.environment.status import Status
 
-from src.simulation.configuration import (
+from src.configuration import (
     Time, TimeConverter,
     MobilityParams
 )

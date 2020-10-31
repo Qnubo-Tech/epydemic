@@ -6,14 +6,16 @@ from src.environment.society import Society
 from src.environment.status import Status
 from src.geometry.geometry import Geometry
 
-from src.simulation import (
-    Graph, Time, TimeConverter,
+from src.configuration import (
+    Time, TimeConverter,
+    SocietyParams,
     DiseaseParams,
     ImmunityParams,
     InfectionParams,
-    POPULATION, HEALTHY_PC, INFECTED_PC,
     PLOT_PARAMETERS
 )
+
+from src.simulation import Graph
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -24,8 +26,10 @@ np.random.seed(72)
 def run():
 
     society = Society(
-        population=POPULATION,
-        initial_condition={"healthy": HEALTHY_PC, "infected": INFECTED_PC}
+        population=SocietyParams.POPULATION,
+        initial_condition={
+            "healthy": SocietyParams.HEALTHY_PC, "infected": SocietyParams.INFECTED_PC
+        }
     )
 
     plt.ion()
@@ -43,7 +47,7 @@ def run():
 
     if PLOT_PARAMETERS:
         table_params = {
-            "Population": POPULATION,
+            "Population": SocietyParams.POPULATION,
             "Time scale [h]": Time.STEP_HOUR,
             "Mean recovery time [days]": InfectionParams.RECOVERY_TIME_DAYS,
             "Mean immunity shield [days]": ImmunityParams.SHIELD_TIME_DAYS,

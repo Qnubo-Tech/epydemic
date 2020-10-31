@@ -2,7 +2,7 @@ from typing import NoReturn
 
 from numpy.random import normal
 
-from src.simulation.configuration import Time
+from src.configuration import Time
 
 
 class DiseaseParameter:

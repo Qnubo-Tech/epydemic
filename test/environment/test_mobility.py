@@ -1,6 +1,6 @@
 import pytest
 
-from src.simulation.configuration import Time, MobilityParams
+from src.configuration.configuration import Time, MobilityParams
 
 from src.environment.mobility import (
     Mobility,

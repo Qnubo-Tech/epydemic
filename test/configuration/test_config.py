@@ -1,10 +1,10 @@
-from src.simulation.configuration import (
+from src.configuration.configuration import (
     Time, TimeConverter,
+    SocietyParams,
     DiseaseParams,
     ImmunityParams,
     InfectionParams,
-    MobilityParams,
-    POPULATION, HEALTHY_PC, INFECTED_PC,
+    MobilityParams
 )
 
 
@@ -21,6 +21,12 @@ def test_Time():
     assert Time.STEP_SEC == 3600
     assert Time.STEP_MIN == 60
     assert Time.STEP_HOUR == 1
+
+
+def test_SocietyParams():
+    assert SocietyParams.POPULATION == 54
+    assert SocietyParams.HEALTHY_PC == 0.99
+    assert SocietyParams.INFECTED_PC == 0.01
 
 
 def test_DiseaseParams():
@@ -50,10 +56,4 @@ def test_MobilityParams():
     assert MobilityParams.RESTRICTION_PROBABILITY == 0
     assert MobilityParams.MOBILITY_TYPE == "unlimited"
     assert MobilityParams.CURFEW_THRESHOLD == 17
-
-
-def test_config_values():
-    assert POPULATION == 54
-    assert HEALTHY_PC == 0.99
-    assert INFECTED_PC == 0.01
 

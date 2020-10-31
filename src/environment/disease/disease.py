@@ -2,7 +2,7 @@ import numpy as np
 
 from src.environment.status import Status
 
-from src.simulation import DiseaseParams
+from src.configuration import DiseaseParams
 
 from src.environment.disease.immunity import Immunity
 from src.environment.disease.infection import Infection

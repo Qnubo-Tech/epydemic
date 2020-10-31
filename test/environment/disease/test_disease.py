@@ -8,7 +8,7 @@ from src.environment.disease.disease import Disease
 from src.environment.disease.immunity import Immunity
 from src.environment.disease.infection import Infection
 
-from src.simulation.configuration import (
+from src.configuration.configuration import (
     StochasticParams, Time,
     DiseaseParams,
     ImmunityParams,

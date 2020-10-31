@@ -6,7 +6,7 @@ from src.environment.disease.immunity import Immunity
 from src.environment.disease.parameter import DiseaseParameter
 from src.environment.disease.infection import Infection
 
-from src.simulation.configuration import StochasticParams, Time, ImmunityParams, InfectionParams
+from src.configuration.configuration import StochasticParams, Time, ImmunityParams, InfectionParams
 
 
 @pytest.fixture()

@@ -1,7 +1,7 @@
 from configparser import ConfigParser
 
 config = ConfigParser()
-config.read('src/simulation/config.ini')
+config.read('src/configuration/config.ini')
 
 
 class TimeConverter:
@@ -19,12 +19,6 @@ class Time:
     STEP_HOUR = STEP_MIN / TimeConverter.HOUR_TO_MIN
 
 
-POPULATION = config.getfloat('simulation', 'population')
-HEALTHY_PC = config.getfloat('simulation', 'healthy')
-INFECTED_PC = config.getfloat('simulation', 'infected')
-
-
-
 PLOT_PARAMETERS = config.getboolean('graph', 'plot_parameters')
 
 
@@ -33,6 +27,12 @@ class StochasticParams:
     RANDOM_RECOVERY = False
     RANDOM_IMMUNITY = False
     AVERAGE_MOBILITY_INFECTION = False
+
+
+class SocietyParams:
+    POPULATION = config.getfloat('society.parameters', 'population')
+    HEALTHY_PC = config.getfloat('society.parameters', 'healthy')
+    INFECTED_PC = config.getfloat('society.parameters', 'infected')
 
 
 class DiseaseParams:

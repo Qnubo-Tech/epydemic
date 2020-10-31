@@ -9,7 +9,7 @@ from src.geometry import Geometry
 from src.environment.agent import Agent
 from src.environment.status import Status
 from src.environment.mobility import MobilityType
-from src.simulation import MobilityParams
+from src.configuration import MobilityParams
 
 
 class Society:
