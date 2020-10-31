@@ -6,8 +6,24 @@ class Geometry:
     class Box:
         Lx = 1
         Ly = 1
-        x_range = np.linspace(0, Lx, 100)
-        y_range = np.linspace(0, Ly, 100)
-        X, Y = np.meshgrid(x_range, y_range)
-        x_limits = [0, Lx]
-        y_limits = [0, Ly]
+
+        @staticmethod
+        def x_range():
+            return np.linspace(0, Geometry.Box.Lx, 100)
+
+        @staticmethod
+        def y_range():
+            return np.linspace(0, Geometry.Box.Ly, 100)
+
+        @staticmethod
+        def x_y():
+            return np.meshgrid(Geometry.Box.x_range(),
+                               Geometry.Box.y_range())
+
+        @staticmethod
+        def x_limits():
+            return [0, Geometry.Box.Lx]
+
+        @staticmethod
+        def y_limits():
+            return [0, Geometry.Box.Ly]
