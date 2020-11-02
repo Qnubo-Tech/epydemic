@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pytest
 
 from src.environment.status import Status
@@ -19,7 +21,8 @@ def test_default_duration(disease_param):
 
 
 def test_random_duration(disease_param):
-    val_1, val_2 = disease_param.random_value, disease_param.random_value
+    disease_param_2 = DiseaseParameter(mean_duration=10, std_duration=1)
+    val_1, val_2 = disease_param.random_value, disease_param_2.random_value
     assert val_1 > 0
     assert val_2 > 0
     assert val_1 != val_2
@@ -41,9 +44,9 @@ def immunity() -> Immunity:
 
 
 @pytest.fixture()
-def random_immunity() -> Immunity:
+def random_immunity() -> Tuple[Immunity, Immunity]:
     StochasticParams.RANDOM_IMMUNITY = True
-    return Immunity(mean_duration=10, std_duration=1)
+    return Immunity(mean_duration=10, std_duration=1), Immunity(mean_duration=10, std_duration=1)
 
 
 def test_default_immunity(immunity):
@@ -52,7 +55,8 @@ def test_default_immunity(immunity):
 
 
 def test_random_immunity(random_immunity):
-    val_1, val_2 = random_immunity.duration, random_immunity.duration
+    immunity_1, immunity_2 = random_immunity
+    val_1, val_2 = immunity_1.duration, immunity_2.duration
     assert val_1 > 0
     assert val_2 > 0
     assert val_1 != val_2
@@ -89,9 +93,9 @@ def infection() -> Infection:
 
 
 @pytest.fixture()
-def random_infection() -> Infection:
+def random_infection() -> Tuple[Infection, Infection]:
     StochasticParams.RANDOM_RECOVERY = True
-    return Infection(mean_duration=10, std_duration=1)
+    return Infection(mean_duration=10, std_duration=1), Infection(mean_duration=10, std_duration=1)
 
 
 def test_default_infection(infection):
@@ -100,7 +104,8 @@ def test_default_infection(infection):
 
 
 def test_random_infection(random_infection):
-    val_1, val_2 = random_infection.duration, random_infection.duration
+    infection_1, infection_2 = random_infection
+    val_1, val_2 = infection_1.duration, infection_2.duration
     assert val_1 > 0
     assert val_2 > 0
     assert val_1 != val_2
