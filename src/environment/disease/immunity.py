@@ -2,10 +2,7 @@ from numpy.random import choice
 
 from src.environment.disease.parameter import DiseaseParameter
 from src.environment.status import Status
-from src.configuration import (
-    StochasticParams,
-    ImmunityParams
-)
+from src.configuration import ImmunityParams
 
 
 class Immunity(DiseaseParameter):
@@ -18,7 +15,7 @@ class Immunity(DiseaseParameter):
 
     @property
     def duration(self) -> float:
-        if StochasticParams.RANDOM_IMMUNITY:
+        if ImmunityParams.RANDOM_SHIELD_TIME:
             return self.random_value
         else:
             return self.default_value

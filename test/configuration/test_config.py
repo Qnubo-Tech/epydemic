@@ -40,6 +40,7 @@ def test_ImmunityParams():
     assert ImmunityParams.SHIELD_TIME_DAYS == 10
     assert ImmunityParams.SHIELD_TIME == 10 * 24 * 3600
     assert ImmunityParams.SHIELD_TIME_ERR == 5 * 24 * 3600
+    assert ImmunityParams.RANDOM_SHIELD_TIME is False
     assert ImmunityParams.PROBABILITY == 0.8
     assert ImmunityParams.LOSS_PROBABILITY == 0.5
 
@@ -48,6 +49,7 @@ def test_InfectionParams():
     assert InfectionParams.RECOVERY_TIME_DAYS == 7
     assert InfectionParams.RECOVERY_TIME == 7 * 24 * 3600
     assert InfectionParams.RECOVERY_TIME_ERR == 1 * 24 * 3600
+    assert InfectionParams.RANDOM_RECOVERY_TIME is False
     assert InfectionParams.CONFINED_PROBABILITY == 0.01
 
 

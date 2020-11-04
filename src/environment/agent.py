@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.geometry import Geometry
+from src.geometry import Box
 from src.environment.disease import Disease, Immunity, Infection
 from src.environment.mobility import MobilityFactory, MobilityType
 from src.environment.status import Status
@@ -49,7 +49,7 @@ class Agent:
         return 1 if self.status == Status.Infected else 0
 
     def _apply_boundary_conditions(self):
-        self.position = self.position % np.array([Geometry.Box.Lx, Geometry.Box.Ly])
+        self.position = self.position % np.array([Box.Lx, Box.Ly])
 
     def step(self, force):
         self.status = self.disease.step(status=self.status, force=force)

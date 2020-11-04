@@ -8,7 +8,7 @@ from src.environment.disease.immunity import Immunity
 from src.environment.disease.parameter import DiseaseParameter
 from src.environment.disease.infection import Infection
 
-from src.configuration.configuration import StochasticParams, Time, ImmunityParams, InfectionParams
+from src.configuration.configuration import Time, ImmunityParams, InfectionParams
 
 
 @pytest.fixture()
@@ -39,13 +39,13 @@ def test_update_time(disease_param):
 
 @pytest.fixture()
 def immunity() -> Immunity:
-    StochasticParams.RANDOM_IMMUNITY = False
+    ImmunityParams.RANDOM_SHIELD_TIME = False
     return Immunity(mean_duration=10)
 
 
 @pytest.fixture()
 def random_immunity() -> Tuple[Immunity, Immunity]:
-    StochasticParams.RANDOM_IMMUNITY = True
+    ImmunityParams.RANDOM_SHIELD_TIME = True
     return Immunity(mean_duration=10, std_duration=1), Immunity(mean_duration=10, std_duration=1)
 
 
@@ -88,13 +88,13 @@ def test_check_immunity_loss_one_prob(immunity):
 
 @pytest.fixture()
 def infection() -> Infection:
-    StochasticParams.RANDOM_RECOVERY = False
+    InfectionParams.RANDOM_RECOVERY_TIME = False
     return Infection(mean_duration=10)
 
 
 @pytest.fixture()
 def random_infection() -> Tuple[Infection, Infection]:
-    StochasticParams.RANDOM_RECOVERY = True
+    InfectionParams.RANDOM_RECOVERY_TIME = True
     return Infection(mean_duration=10, std_duration=1), Infection(mean_duration=10, std_duration=1)
 
 

@@ -8,7 +8,7 @@ from src.environment.agent import Agent
 from src.environment.mobility import MobilityType
 from src.environment.status import Status
 
-from src.geometry import Geometry
+from src.geometry import Box
 
 
 @pytest.fixture()
@@ -54,10 +54,10 @@ def test_set_initial_viral_load_infected(infected_agent):
 
 
 def test_apply_boundary_conditions(agent):
-    agent.position = np.array([Geometry.Box.Lx * 1.5, Geometry.Box.Ly * 1.5])
+    agent.position = np.array([Box.Lx * 1.5, Box.Ly * 1.5])
     agent._apply_boundary_conditions()
-    assert 0 <= agent.position[0] <= Geometry.Box.Lx
-    assert 0 <= agent.position[1] <= Geometry.Box.Ly
+    assert 0 <= agent.position[0] <= Box.Lx
+    assert 0 <= agent.position[1] <= Box.Ly
 
 
 def test_viral_force(infected_agent):
@@ -73,8 +73,8 @@ def test_viral_force(infected_agent):
 def test_step(agent):
     agent.step(force=0)
     assert agent.viral_load == 0
-    assert 0 <= agent.x <= Geometry.Box.Lx
-    assert 0 <= agent.y <= Geometry.Box.Ly
+    assert 0 <= agent.x <= Box.Lx
+    assert 0 <= agent.y <= Box.Ly
     assert agent.t_alive == Time.STEP_SEC
 
 

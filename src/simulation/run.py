@@ -2,9 +2,9 @@ import logging
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.environment.society import Society
+from src.environment import Society
 from src.environment.status import Status
-from src.geometry.geometry import Geometry
+from src.geometry import Box
 
 from src.configuration import (
     Time, TimeConverter,
@@ -28,7 +28,8 @@ def run():
     society = Society(
         population=SocietyParams.POPULATION,
         initial_condition={
-            "healthy": SocietyParams.HEALTHY_PC, "infected": SocietyParams.INFECTED_PC
+            Status.Healthy.name: SocietyParams.HEALTHY_PC,
+            Status.Infected.name: SocietyParams.INFECTED_PC
         }
     )
 
@@ -67,7 +68,7 @@ def run():
             axis[0].clear()
 
             society_status = society.get_status()
-            cumulative_status = society.get_cumulative_status()
+            cumulative_status = society.get_stacked_status()
 
             times.append(time / TimeConverter.DAY_TO_SEC)
             # Graph.plot_areas_society_progress(ax=axis[0],
@@ -79,17 +80,17 @@ def run():
                                               society_snapshot=society_status,
                                               society_progress=society_progress)
 
-            axis[0].set_ylim(0, Geometry.Box.Ly)
+            axis[0].set_ylim(0, Box.Ly)
             axis[0].legend(loc=2)
 
             society.plot(axis[1])
 
             plt.show()
             logger.info(f"| {time / TimeConverter.HOUR_TO_SEC} h - "
-                        f"infected: {society_status[Status.Infected.name]}, "
-                        f"healthy: {society_status[Status.Healthy.name]}, "
-                        f"immune: {society_status[Status.Immune.name]}, "
-                        f"confined: {society_status[Status.Confined.name]}")
+                        f"infected: {society.num_infected}, "
+                        f"healthy: {society.num_healthy}, "
+                        f"immune: {society.num_immune}, "
+                        f"confined: {society.num_confined}")
 
         if iteration == 0 or (iteration == 10):
             iteration = 1

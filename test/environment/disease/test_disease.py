@@ -9,7 +9,7 @@ from src.environment.disease.immunity import Immunity
 from src.environment.disease.infection import Infection
 
 from src.configuration.configuration import (
-    StochasticParams, Time,
+    Time,
     DiseaseParams,
     ImmunityParams,
     InfectionParams
@@ -18,8 +18,8 @@ from src.configuration.configuration import (
 
 @pytest.fixture
 def disease() -> Disease:
-    StochasticParams.RANDOM_IMMUNITY = False
-    StochasticParams.RANDOM_RECOVERY = False
+    ImmunityParams.RANDOM_SHIELD_TIME = False
+    InfectionParams.RANDOM_RECOVERY_TIME = False
     ds = Disease(viral_load=1.0,
                  radius=0.02,
                  immunity=Immunity(mean_duration=10),
