@@ -2,7 +2,7 @@ name: Unit Tests
 
 on:
   push:
-    branches: [add-tests]
+    branches: [master]
 
 jobs:
   build:
