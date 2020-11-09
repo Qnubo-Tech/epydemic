@@ -1,10 +1,10 @@
 import numpy as np
 
-from src.geometry import Geometry
-from src.environment.disease import Disease
+from src.geometry import Box
+from src.environment.disease import Disease, Immunity, Infection
 from src.environment.mobility import MobilityFactory, MobilityType
 from src.environment.status import Status
-from src.simulation import Time, INFECTION_RADIUS
+from src.configuration import Time, DiseaseParams
 
 
 class Agent:
@@ -22,7 +22,10 @@ class Agent:
 
         self.status = status
         initial_viral_load = self._set_initial_viral_load()
-        self.disease = Disease(viral_load=initial_viral_load, radius=INFECTION_RADIUS)
+        self.disease = Disease(viral_load=initial_viral_load,
+                               radius=DiseaseParams.INFECTION_RADIUS,
+                               immunity=Immunity(),
+                               infection=Infection())
 
         self.t_alive = 0
 
@@ -40,20 +43,17 @@ class Agent:
 
     @property
     def mobility_args(self):
-        return {
-            "dt": Time.STEP_SEC,
-            "time_alive": self.t_alive
-        }
+        return {"time_alive": self.t_alive}
 
     def _set_initial_viral_load(self):
         return 1 if self.status == Status.Infected else 0
 
     def _apply_boundary_conditions(self):
-
-        self.position = self.position % np.array([Geometry.Box.Lx, Geometry.Box.Ly])
+        self.position = self.position % np.array([Box.Lx, Box.Ly])
 
     def step(self, force):
-        self.status, self.mobility.value = self.disease.step(status=self.status, force=force)
+        self.status = self.disease.step(status=self.status, force=force)
+        self.mobility.update_value(status=self.status)
         if self.status != Status.Confined:
             self.position += self.mobility.update_position(mobility_args=self.mobility_args)
             self._apply_boundary_conditions()
