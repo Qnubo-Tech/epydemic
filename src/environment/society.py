@@ -73,6 +73,10 @@ class Society:
     def num_confined(self) -> int:
         return self.count_statuses(status=Status.Confined)
 
+    @property
+    def confined_share(self) -> float:
+        return self.num_confined / self.population
+
     def get_status(self) -> Dict:
         status_dict = {st.name: self.count_statuses(st) for st in Status}
         status_dict["Total"] = self.population
@@ -110,6 +114,18 @@ class Society:
         ]
 
         return np.array(aux_f).reshape(mesh.x_range().size, mesh.y_range().size)
+
+    def _set_confinement_eligibility(self):
+
+        for agent in self.agents:
+            agent.confinement = False
+
+        if self.confined_share <= 0.1:
+            conf_list = np.random.choice(
+                self.agents, size=int(self.population * 0.05), replace=False
+            )
+            for agent in conf_list:
+                agent.confinement = True
 
     def plot_field(self, ax, mesh):
 

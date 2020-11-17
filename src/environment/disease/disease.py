@@ -41,7 +41,7 @@ class Disease:
 
             if self.infection.time <= self.infection.duration:
                 self._keep_viral_load()
-                return self.infection.check_confinement()
+                return Status.Infected
 
             else:
                 self._unload_viral_load()

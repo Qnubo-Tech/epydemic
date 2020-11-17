@@ -26,6 +26,11 @@ class Agent:
                                radius=DiseaseParams.INFECTION_RADIUS,
                                immunity=Immunity(),
                                infection=Infection())
+        # This parameter can be True/False at each iteration and set from Society class
+        # according to a config percentage that evaluates how many confined agents there are
+        # Also confinement policy starts when a infected threshold is reached or a certain
+        # time has passed since the first infection
+        self.confinement = False
 
         self.t_alive = 0
 
@@ -48,17 +53,25 @@ class Agent:
     def _set_initial_viral_load(self):
         return 1 if self.status == Status.Infected else 0
 
+    def _check_confinement(self):
+        if self.confinement and self.status == Status.Infected:
+            self.status = Status.Confined
+
     def _apply_boundary_conditions(self):
         self.position = self.position % np.array([Box.Lx, Box.Ly])
 
     def step(self, force):
         self.status = self.disease.step(status=self.status, force=force)
         self.mobility.update_value(status=self.status)
+
+        self._check_confinement()
+
         if self.status != Status.Confined:
             self.position += self.mobility.update_position(mobility_args=self.mobility_args)
             self._apply_boundary_conditions()
         else:
             self.position = np.array([-1.0, -1.0])
+
         self.t_alive += Time.STEP_SEC
 
     def viral_force(self, position):
