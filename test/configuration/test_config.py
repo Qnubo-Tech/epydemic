@@ -1,6 +1,7 @@
 from src.configuration.configuration import (
     Time, TimeConverter,
     SocietyParams,
+    ConfinementParams,
     DiseaseParams,
     ImmunityParams,
     InfectionParams,
@@ -29,6 +30,11 @@ def test_SocietyParams():
     assert SocietyParams.INFECTED_PC == 0.01
 
 
+def test_ConfinementParams():
+    assert ConfinementParams.CONFINEMENT_CAPACITY == 0.15
+    assert ConfinementParams.ELIGIBLE_POPULATION_SHARE == 0.1
+
+
 def test_DiseaseParams():
     assert DiseaseParams.INFECTION_RADIUS == 0.02
     assert DiseaseParams.VIRAL_LOAD_INFECTION_THRESHOLD == 0.9
@@ -50,7 +56,6 @@ def test_InfectionParams():
     assert InfectionParams.RECOVERY_TIME == 7 * 24 * 3600
     assert InfectionParams.RECOVERY_TIME_ERR == 1 * 24 * 3600
     assert InfectionParams.RANDOM_RECOVERY_TIME is False
-    assert InfectionParams.CONFINED_PROBABILITY == 0.01
 
 
 def test_MobilityParams():

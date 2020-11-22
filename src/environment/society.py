@@ -10,7 +10,7 @@ from src.geometry import Box
 from src.environment.agent import Agent
 from src.environment.status import Status
 from src.environment.mobility import MobilityType
-from src.configuration import MobilityParams
+from src.configuration import (ConfinementParams, MobilityParams, Time, TimeConverter)
 
 
 class Society:
@@ -19,6 +19,8 @@ class Society:
 
         self.population = int(population)
         self.agents = self._create_agents(initial_condition)
+
+        self.t_simulation = 0
 
     def _create_agents(self, initial_condition) -> List[Agent]:
 
@@ -95,11 +97,31 @@ class Society:
 
         return status_dict
 
+    def _set_confinement_eligibility(self):
+
+        for agent in self.agents:
+            agent.allow_confinement = False
+
+        if self.confined_share < ConfinementParams.CONFINEMENT_CAPACITY:
+            conf_list = np.random.choice(
+                self.agents,
+                size=int(self.population * ConfinementParams.ELIGIBLE_POPULATION_SHARE),
+                replace=False
+            )
+            for agent in conf_list:
+                agent.allow_confinement = True
+
     def make_step(self):
 
         Parallel(n_jobs=-10, prefer="threads")(
             delayed(agent.step)(self.force_field(agent.position)) for agent in self.agents
         )
+
+        # Reset confinement eligibility on a daily basis
+        if ((self.t_simulation / Time.STEP_SEC) % TimeConverter.DAY_TO_HOUR) == 0:
+            self._set_confinement_eligibility()
+
+        self.t_simulation += Time.STEP_SEC
 
     def force_field(self, position: np.array) -> np.array:
 
@@ -114,18 +136,6 @@ class Society:
         ]
 
         return np.array(aux_f).reshape(mesh.x_range().size, mesh.y_range().size)
-
-    def _set_confinement_eligibility(self):
-
-        for agent in self.agents:
-            agent.confinement = False
-
-        if self.confined_share <= 0.1:
-            conf_list = np.random.choice(
-                self.agents, size=int(self.population * 0.05), replace=False
-            )
-            for agent in conf_list:
-                agent.confinement = True
 
     def plot_field(self, ax, mesh):
 

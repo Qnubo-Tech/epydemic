@@ -28,6 +28,11 @@ class SocietyParams:
     INFECTED_PC = config.getfloat('society.parameters', 'infected')
 
 
+class ConfinementParams:
+    CONFINEMENT_CAPACITY = config.getfloat('society.confinement', 'capacity')
+    ELIGIBLE_POPULATION_SHARE = config.getfloat('society.confinement', 'eligible_population_share')
+
+
 class DiseaseParams:
     INFECTION_RADIUS = config.getfloat('disease.parameters', 'infection_radius')
 
@@ -58,8 +63,6 @@ class InfectionParams:
                                         'recovery_time_err_days') * TimeConverter.DAY_TO_SEC
 
     RANDOM_RECOVERY_TIME = config.getboolean('disease.infection', 'random_recovery_time')
-
-    CONFINED_PROBABILITY = config.getfloat('disease.infection', 'confined_probability')
 
 
 class MobilityParams:

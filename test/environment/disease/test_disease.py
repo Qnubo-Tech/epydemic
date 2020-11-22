@@ -100,29 +100,9 @@ def test_dynamics_keep_infected(disease):
     disease.viral_load = 1
     disease.infection.time = 1
 
-    default_value = InfectionParams.CONFINED_PROBABILITY
-    InfectionParams.CONFINED_PROBABILITY = 0
-
     assert disease._update_dynamics(status=Status.Infected, force=1) == Status.Infected
     assert disease.viral_load == 1
     assert disease.infection.time == 1
-
-    InfectionParams.CONFINED_PROBABILITY = default_value
-
-
-def test_dynammics_infected_to_confined(disease):
-    disease.viral_load = 1
-    disease.infection.time = 1
-
-    default_value = InfectionParams.CONFINED_PROBABILITY
-    InfectionParams.CONFINED_PROBABILITY = 1
-
-    assert disease._update_dynamics(status=Status.Infected, force=1) == Status.Confined
-    assert disease.viral_load == 1
-    assert disease.infection.time == 1
-
-    InfectionParams.CONFINED_PROBABILITY = default_value
-
 
 def test_dynammics_infected_to_immune(disease):
     disease.viral_load = 1

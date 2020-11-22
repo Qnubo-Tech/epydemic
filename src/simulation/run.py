@@ -69,7 +69,6 @@ def run():
 
             society_status = society.get_status()
             cumulative_status = society.get_stacked_status()
-            society._set_confinement_eligibility()
 
             times.append(time / TimeConverter.DAY_TO_SEC)
             # Graph.plot_areas_society_progress(ax=axis[0],

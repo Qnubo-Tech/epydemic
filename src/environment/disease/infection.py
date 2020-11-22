@@ -23,14 +23,6 @@ class Infection(DiseaseParameter):
         else:
             return self.default_value
 
-    def check_confinement(self) -> Status:
-        st = choice(
-            [Status.Confined, Status.Infected],
-            p=[InfectionParams.CONFINED_PROBABILITY, (1 - InfectionParams.CONFINED_PROBABILITY)]
-        )
-
-        return st
-
     def check_recovery(self) -> Status:
         st = choice(
             [Status.Immune, Status.Healthy],

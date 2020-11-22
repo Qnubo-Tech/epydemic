@@ -3,7 +3,7 @@ import pytest
 import numpy as np
 from numpy.testing import assert_array_equal
 
-from src.configuration import DiseaseParams
+from src.configuration import ConfinementParams, DiseaseParams
 from src.environment import Society, Status
 from src.geometry import Box
 
@@ -38,6 +38,8 @@ def test_initial_params(society):
     assert society.num_healthy == 9
     assert society.num_immune == 0
     assert society.num_confined == 0
+    assert society.confined_share == 0
+    assert society.t_simulation == 0
 
 
 def test_count_statuses(society):
@@ -70,6 +72,29 @@ def test_get_stacked_status(society):
         Status.Confined.name: 1.0
     }
     assert society.get_stacked_status() == society_status
+
+
+def test_set_confinement_eligibility_no_eligibles(society):
+    num_confined = round(ConfinementParams.CONFINEMENT_CAPACITY * society.population) + 1
+    for i in range(num_confined):
+        society.agents[i].status = Status.Confined
+
+    society._set_confinement_eligibility()
+
+    assert society.confined_share > ConfinementParams.CONFINEMENT_CAPACITY
+    assert all([agent.allow_confinement is False for agent in society.agents])
+
+
+def test_set_confinement_eligibility(society):
+    society._set_confinement_eligibility()
+
+    eligible_share = int(society.population * ConfinementParams.ELIGIBLE_POPULATION_SHARE)
+    confinement_eligible_agents = [
+        1 if agent.allow_confinement is True else 0
+        for agent in society.agents
+    ]
+
+    assert sum(confinement_eligible_agents) == eligible_share
 
 
 def test_force_field(infected_society):

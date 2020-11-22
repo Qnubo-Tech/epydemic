@@ -133,23 +133,3 @@ def test_check_recovery_to_healthy(infection):
     assert infection.time == 0
 
     ImmunityParams.PROBABILITY = default_value
-
-
-def test_check_confinement_zero_prob(infection):
-    default_value = InfectionParams.CONFINED_PROBABILITY
-
-    InfectionParams.CONFINED_PROBABILITY = 0
-
-    assert infection.check_confinement() == Status.Infected
-
-    InfectionParams.CONFINED_PROBABILITY = default_value
-
-
-def test_check_confinement_one_prob(infection):
-    default_value = InfectionParams.CONFINED_PROBABILITY
-
-    InfectionParams.CONFINED_PROBABILITY = 1
-
-    assert infection.check_confinement() == Status.Confined
-
-    InfectionParams.CONFINED_PROBABILITY = default_value

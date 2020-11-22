@@ -39,6 +39,7 @@ def test_initial_values(agent):
     assert agent.status == Status.Healthy
     assert agent.disease.viral_load == 0
     assert agent.t_alive == 0
+    assert agent.allow_confinement is False
     assert agent.x == 0
     assert agent.y == 0
     assert agent.viral_load == 0
@@ -51,6 +52,17 @@ def test_set_initial_viral_load_not_infected(agent):
 
 def test_set_initial_viral_load_infected(infected_agent):
     assert infected_agent._set_initial_viral_load() == 1
+
+
+def test_check_confinement_no_eligible(infected_agent):
+    infected_agent._check_confinement()
+    assert infected_agent.status == Status.Infected
+
+
+def test_check_confinement_eligible(infected_agent):
+    infected_agent.allow_confinement = True
+    infected_agent._check_confinement()
+    assert infected_agent.status == Status.Confined
 
 
 def test_apply_boundary_conditions(agent):

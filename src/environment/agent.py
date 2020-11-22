@@ -26,11 +26,8 @@ class Agent:
                                radius=DiseaseParams.INFECTION_RADIUS,
                                immunity=Immunity(),
                                infection=Infection())
-        # This parameter can be True/False at each iteration and set from Society class
-        # according to a config percentage that evaluates how many confined agents there are
-        # Also confinement policy starts when a infected threshold is reached or a certain
-        # time has passed since the first infection
-        self.confinement = False
+
+        self.allow_confinement = False
 
         self.t_alive = 0
 
@@ -54,7 +51,7 @@ class Agent:
         return 1 if self.status == Status.Infected else 0
 
     def _check_confinement(self):
-        if self.confinement and self.status == Status.Infected:
+        if self.allow_confinement and self.status == Status.Infected:
             self.status = Status.Confined
 
     def _apply_boundary_conditions(self):
