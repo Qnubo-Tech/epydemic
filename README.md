@@ -25,6 +25,7 @@ The model introduced in this repository consists in an agent-based approach whic
   * <img src="images/confined.png" alt="confined" height="35" width="35"/>*Confined agent*: It is removed from the geometry, therefore it overcomes the disease without transmitting the virus to the rest of agents.
 * **Allow confinement**: A boolean variable to indicate whether the agent is eligible to be confined.
 * **Time alive**: Time passed since the beginning of the simulation.
+* **Disease**: The disease that each agent suffer. Although the disease is the same for all agents, the initial conditions and dynamics might vary from one agent to another. This helps to reflect how the disease impacts and behaves differently across the population. 
 
 Besides, the agent is endowed with the following *actions*/methods:
 
