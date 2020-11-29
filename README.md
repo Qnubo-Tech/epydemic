@@ -21,6 +21,10 @@ The model introduced in this repository consists in an agent-based approach whic
 * **Status**: A variable which identifies the status of the agent, this being either **healthy**, **infected**, **immune** or **confined** with the aim or reflect the states of the population. The status of the agent will be reflected in its colour when represented, e.g:
   * <img src="images/infected.png" alt="infected" height="35" width="36"/>*Infected agent*: The circle intensity is maximum and the radius is equivalent (in reduced units) to two meters.
   * <img src="images/healthy-interacting.png" alt="healthy-interacting" height="37" width="38" />*Healthy agents* walking nearby
+  * <img src="images/immune.png" alt="immune" height="33" width="33"/>*Immune agent*: Although it cannot become infected, it accumulates viral load and can widespread the disease.
+  * <img src="images/confined.png" alt="confined" height="35" width="35"/>*Confined agent*: It is removed from the geometry, therefore it overcomes the disease without transmitting the virus to the rest of agents.
+* **Allow confinement**: A boolean variable to indicate whether the agent is eligible to be confined.
+* **Time alive**: Time passed since the beginning of the simulation.
 
 Besides, the agent is endowed with the following *actions*/methods:
 
