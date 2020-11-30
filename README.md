@@ -25,12 +25,29 @@ The model introduced in this repository consists in an agent-based approach whic
   * <img src="images/confined.png" alt="confined" height="35" width="35"/>*Confined agent*: It is removed from the geometry, therefore it overcomes the disease without transmitting the virus to the rest of agents.
 * **Allow confinement**: A boolean variable to indicate whether the agent is eligible to be confined.
 * **Time alive**: Time passed since the beginning of the simulation.
-* **Disease**: The disease that each agent suffer. Although the disease is the same for all agents, the initial conditions and dynamics might vary from one agent to another. This helps to reflect how the disease impacts and behaves differently across the population. 
+* **Disease**: The disease that each agent suffer. Although the disease is the same for all agents, the initial conditions and dynamics might vary from one agent to another. This helps to reflect how the disease impacts and behaves differently across the population.
 
 Besides, the agent is endowed with the following *actions*/methods:
 
-* **Step**: The function which updates the current position of the agent by randomly choosing a sample from a normal distribution.
-* **Viral force**: The intensity of viral load which an agent will suffer due to the ambient viral presence. 
+* **Viral force**: The intensity of viral load which an agent contributes to the environment. 
+* **Step**: The function which updates the position and disease with regard to viral force it suffers. The position is recalculated by randomly choosing a sample from a normal distribution.
+
+The **disease** object contains the dynamics of the system leading to the status transitions. The disease that each agent suffers is initialised with the following attributes: 
+
+* **Viral load**: The intensity of viral amount that the disease contains. It is represented as a scale from 0 to 1, where 1 is the maximum viral load that the disease can bear.
+* **Infection radius**: It delimits the area of influence where the disease can be transmitted. By default it is set to two meters.
+* **Immunity**: An object containing information related to immunity duration and loss of immunity.
+    * The duration is the time that agent remains Immune without status change regardless the viral load. It can be a fixed period for all diseases initialised or randomly drawn from a normal distribution, meaning that the immunity duration
+    varies across the agents.
+    * The loss of immunity evaluates whether the agent remains Immune or losses its immunity being Healthy and susceptible to become Infected again. 
+* **Infection**: It specifies the disease duration as well as the transitions to recover after the infection.
+    * The duration is the time the agent remains Infected regardless the viral load, i.e. the viral load for the infected agent might be reduced although the agent is still Infected.
+    It can be a fixed period for all diseases initialised or randomly drawn from a normal distribution, meaning that the agents pass the disease in different periods.
+    * The recovery from infection checks whether agent becomes Healthy or Immune after passing the disease.
+    
+In addition, the disease contains these actions:
+
+[TBC] 
 
 ### Results
 
