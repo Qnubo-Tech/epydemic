@@ -15,9 +15,9 @@ class Infection(DiseaseParameter):
                  std_duration: float = InfectionParams.RECOVERY_TIME_ERR):
 
         super().__init__(mean_duration, std_duration)
+        self.duration = self._set_duration()
 
-    @property
-    def duration(self) -> float:
+    def _set_duration(self) -> float:
         if InfectionParams.RANDOM_RECOVERY_TIME:
             return self.random_value
         else:

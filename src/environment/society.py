@@ -113,7 +113,7 @@ class Society:
 
     def make_step(self):
 
-        Parallel(n_jobs=-10, prefer="threads")(
+        Parallel(n_jobs=2, prefer="threads")(
             delayed(agent.step)(self.force_field(agent.position)) for agent in self.agents
         )
 

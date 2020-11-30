@@ -12,9 +12,9 @@ class Immunity(DiseaseParameter):
                  std_duration: float = ImmunityParams.SHIELD_TIME_ERR):
 
         super().__init__(mean_duration, std_duration)
+        self.duration = self._set_duration()
 
-    @property
-    def duration(self) -> float:
+    def _set_duration(self) -> float:
         if ImmunityParams.RANDOM_SHIELD_TIME:
             return self.random_value
         else:
