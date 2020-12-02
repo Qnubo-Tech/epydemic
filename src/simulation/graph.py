@@ -48,6 +48,8 @@ class Graph:
                            society_snapshot: Dict,
                            society_progress: Dict):
 
+        ax.set_xlabel('time [days]')
+        ax.set_ylabel('population percentage')
         for st in Status:
             society_progress[st.name].append(society_snapshot[st.name] / society_snapshot["Total"])
             ax.plot(
@@ -68,6 +70,8 @@ class Graph:
                                    society_progress: Dict):
 
         previous_status = None
+        ax.set_xlabel('time [days]')
+        ax.set_ylabel('population percentage')
         for st in Status:
             society_progress[st.name].append(society_snapshot[st.name])
 
