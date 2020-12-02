@@ -45,9 +45,30 @@ The **disease** object contains the dynamics of the system leading to the status
     It can be a fixed period for all diseases initialised or randomly drawn from a normal distribution, meaning that the agents pass the disease in different periods.
     * The recovery from infection checks whether agent becomes Healthy or Immune after passing the disease.
     
-In addition, the disease contains these actions:
+In addition, the disease object has these actions:
 
-[TBC] 
+* **Force**: It computes the viral force between the agent position and a given position taking into account the viral load and the infection radius.
+* **Step**: It evaluates the disease evolution, i.e. the status of the agent in the following time step, looking at the current status of the agent and the viral force it suffers.
+
+The Status transitions and dynamics adhere to the following rules, evaluated at each time step:
+
+* A **Healthy** agent suffers a viral force. 
+    * When the force is null, i.e. none agent with viral load is in its nearby, its viral load decreases *exponentially*.
+    * However, if the force is greater than zero, its viral load increases in *proportion* to the viral force suffered.
+    * When the viral load of the agent exceeds an *infection threshold* the agent becomes **Infected**, otherwise it remains **Healthy**.
+
+* An **Infected** agent does not change its status (remains **Infected**) until the *infection period* has passed. 
+Based on the *confinement capacity* policy, this type of agents might be randomly eligible to be **Confined**. When it becomes eligible, it moves directly to the **Confined** status. The dynamics of the **Infected** agent are:   
+    * During the *infection period*, it *keeps* its viral load unchanged.
+    * After the *infection period*, its viral load decreases *exponentially*. Immediately, the agent becomes **Healthy** or **Immune** according to a *probability* of developing immunity.
+
+* An **Immune** agent ignores the viral force it suffers.
+    * At each step, its viral load decreases *exponentially*.
+    * It remains **Immune**, until the *immunity period* is reached. After this point, the agent might lose its immunity and be **Healthy** with regard to a *probability* of immunity loss.
+    
+* A **Confined** agent is an **Infected** agent removed from the geometry. Therefore, it does not contribute to the environment and overcomes the infection isolated.
+   * At each step, its viral load decreases *exponentially*.
+   * After the *infection period*, its viral load decreases *exponentially*. Immediately, the agent becomes **Healthy** or **Immune** according to a *probability* of developing immunity.
 
 ### Results
 
