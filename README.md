@@ -1,6 +1,6 @@
 <img src="images/virus.png" alt="virus" height="100" width="110"/> 
 
-## Welcome to IDDS
+## Welcome to ePydemic
 
 This repository aims at becoming a workbench for researches to play with a simple but realistic model of infectious-disease spreading.
 
